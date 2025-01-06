@@ -324,7 +324,7 @@ th {
     width: 100%;
   }
   .search-filter .search {
-    width: 100%;
+    width: 100% !important;
   }
   .search-filter .filter-check {
     flex-wrap: wrap;
@@ -332,7 +332,7 @@ th {
     gap: 10px;
   }
   .search-filter .input-filter {
-    width: -webkit-fill-available;
+    width: -webkit-fill-available !important;
   }
 }
 
@@ -367,10 +367,10 @@ th {
   .barang-input,
   .input-def,
   .medsos-container {
-    width: 550px;
+    width: 550px !important;
   }
   .medsos-wrap .medsos {
-    width: auto;
+    width: auto !important;
   }
   .medsos-wrap input {
     width: 90%;
@@ -378,7 +378,7 @@ th {
 }
 @media (max-width: 610px) {
   .search-filter .filter-check {
-    width: 100%;
+    width: 100% !important;
   }
 }
 @media (max-width: 560px) {
@@ -444,7 +444,7 @@ th {
   }
   .input-data input,
   .medsos-wrap .medsos {
-    height: 30px;
+    height: 30px !important;
     border-radius: 5px;
   }
   main.profil textarea {
