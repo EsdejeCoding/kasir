@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./style/main-style.css">
+        <link rel="stylesheet" href="./style/profil-style.css">
+      </head>
+    <body>
+        <nav class="navbar">
+          <div class="logo">
+            <a><span>Ka</span><i class="fa fa-dollar" aria-hidden="true"></i><span>ir</span></a>
+          </div>
+          <input type="checkbox" id="menu-toggle" class="menu-toggle">
+          <label for="menu-toggle" class="menu-ic">Menu</label>
+          <ul>
+            <li class="nav-item"><a href="./kasir.html">Kasir</a></li>
+            <li class="nav-item"><a href="./input-harga.html">Input Harga</a></li>
+            <li class="nav-item"><a href="./laporan.html">Laporan</a></li>
+            <li class="nav-item"><a href="./profil.html" style="background: #6352d5;">Profil</a></li>
+          </ul>
+
+        </nav>
+        <main class="profil">
+            <div class="form-container">
+                <form class="form-data">
+                    <h1>Profil</h1>
+                    <div class="input-data">
+                        <label for="nama" class="label-input">Nama</label>
+                        <input id="nama" class="input-def" required="">
+                    </div>
+                    <div class="input-data">
+                        <label for="alamat" class="label-input">Alamat</label>
+                        <input id="alamat" class="input-def" required="">
+                    </div>
+                    <div class="input-data">
+                        <label for="telepon" class="label-input">Telepon</label>
+                        <input id="telepon" type="number" class="input-def" required="">
+                    </div>
+                    <div class="input-data">
+                        <label class="label-input">Medsos</label>
+                        <div class="medsos-container">
+                          <div class="medsos-wrap">
+                              <select class="medsos">
+                                  <option value="email">Email</option>
+                                  <option value="ig">Instagram</option>
+                                  <option value="fb">Facebook</option>
+                                  <option value="tt">Tiktok</option>
+                                  <option value="x">X</option>
+                                  <option value="other">Lainnya</option>
+                                </select>
+                              <input class="akun-medsos" required="">
+                              <div class="tambah-medsos">
+                                <div class="fa fa-remove" onclick="HapusMedsos(event)"></div>
+                                <div class="fa fa-plus" onclick="TambahMedsos(event.target)"></div>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="input-data">
+                        <label for="keterangan" class="label-input">Keterangan</label>
+                        <textarea id="keterangan"  class="input-def"></textarea>
+                    </div>
+                    <button>Tambah Data</button>
+                </form>
+              
+            </div>
+        </main>
+        <script>
+          const profilKey = 'profil-kasir'
+
+        /***Mengubah JSON String*/
+        const setJSON = (str) => {
+          return JSON.stringify(str);
+        };
+
+        /***Mengubah String menjadi JSON */
+        const getJSON = (jsn) => {
+          return JSON.parse(jsn);
+        };
+
+        /***Mengambil atau mengubah localStorage*/
+        const GetSet_DataLocal = (gs, val = "") => {
+          if (gs === "get") return localStorage.getItem(profilKey);
+          else if (gs === "set") localStorage.setItem(profilKey, val);
+        };
+
+        if(typeof Storage !== "undefined"){
+          
+          let profil = {
+            nama,
+            alamat,
+            telepon,
+            medsos:[],
+            keterangan,
+            save:false
+          }
+
+          function inputProfil(){
+            return {
+              main : document.querySelectorAll('.input-data input[id]'),
+              medsos : document.querySelectorAll('.input-data .medsos-wrap'),
+              ket : document.querySelector('.input-data textarea'),
+            }
+          }
+          
+          const dataLocal = GetSet_DataLocal('get') ? true : false
+
+          if(dataLocal) {  
+            document.querySelector('.form-data button').textContent = 'Edit'          
+            profil = getJSON(GetSet_DataLocal('get'))
+            profil.save = false
+            for(let i = 0; i < profil.medsos.length; i++){
+              if(i>0)TambahMedsos(document.querySelector('.tambah-medsos .fa-plus'))
+            }
+            inputProfil().main[0].value = profil.nama
+            inputProfil().main[1].value = profil.alamat
+            inputProfil().main[2].value = profil.telepon
+
+            profil.medsos.forEach((data, index)=>{
+              inputProfil().medsos[index].querySelector('.medsos').value = data.platform
+              inputProfil().medsos[index].querySelector('.akun-medsos').value = data.akun
+
+              inputProfil().medsos[index].querySelector('.medsos').disabled = true
+            })
+
+            inputProfil().ket.value = profil.keterangan
+            
+            document.querySelectorAll('.form-data input, .form-data textarea').forEach((item)=>{
+              item.readOnly = true
+            })            
+
+            profil.save = true
+            
+          }
+
+
+
+          function HapusMedsos(e){
+            if(document.querySelectorAll('div.medsos-wrap').length > 1 && !profil.save) e.target.parentElement.closest('div.medsos-wrap').remove()              
+          }
+
+          function TambahMedsos(e){
+            if(!profil.save){
+              const elm = e.parentElement.closest('div.medsos-wrap')
+              elm.insertAdjacentHTML('afterend', elm.outerHTML)
+            }
+          }
+          document.querySelector('form.form-data').addEventListener('submit',(e)=>{
+            e.preventDefault()
+            const input_textareaReadOnly = (tf=true)=>{
+              e.target.querySelectorAll('.form-data input, .form-data textarea').forEach((item)=>{
+                item.readOnly = tf
+              })
+              e.target.querySelectorAll('.form-data .medsos').forEach((item)=>{
+                item.disabled = tf
+              })
+            }
+            if(profil.save){
+              input_textareaReadOnly(false)            
+  
+              e.target.lastElementChild.textContent = 'Tambah Data'
+              profil.save = false
+              console.log(e.target.querySelectorAll('form input, form textarea').length)
+            }
+            else{
+              const inputData = inputProfil()
+
+              let medsosList = []
+
+              inputData.medsos.forEach((item)=>{
+                medsosList.push({
+                  platform: item.querySelector('.medsos').value,
+                  akun: item.querySelector('.akun-medsos').value
+                })
+              })
+
+              profil = {
+                nama: inputData.main[0].value,
+                alamat: inputData.main[1].value,
+                telepon: inputData.main[2].value,
+                medsos:medsosList,
+                keterangan: inputData.ket.value,
+                save: true
+              }
+
+              GetSet_DataLocal('set', setJSON(profil))
+            
+              console.log(profil)
+
+              input_textareaReadOnly()
+              e.target.lastElementChild.textContent = 'Edit'
+          }
+  
+          })
+          //console.log(GetSet_DataLocal('get')?'ada':'kosong')
+
+        }
+        else alert("Browser Tidak Suport")
+        </script>
+    </body>
+</html>

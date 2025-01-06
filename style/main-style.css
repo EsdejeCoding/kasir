@@ -1,0 +1,490 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+}
+h1 {
+  margin: 0;
+}
+.logo {
+  height: fit-content;
+  margin: auto 0 0 25px;
+}
+
+.logo a {
+  font-size: xx-large;
+  display: inline-block;
+  padding: 10px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  background: #715fea;
+  height: fit-content;
+  box-sizing: border-box;
+  position: sticky;
+  top: 0;
+  box-shadow: 0px 1px 5px 0px #504d4d;
+  color: white;
+  padding: 10px;
+  align-items: center;
+  z-index: 1000;
+}
+.navbar .menu-toggle,
+.navbar .menu-ic {
+  display: none;
+}
+
+.navbar ul {
+  display: flex;
+  column-gap: 20px;
+  margin: auto 0;
+  align-items: center;
+  height: fit-content;
+  flex-wrap: wrap;
+  padding: 0;
+}
+
+.nav-item,
+.tab-item {
+  list-style: none;
+  height: fit-content;
+}
+
+.nav-item a {
+  text-decoration: none;
+  display: inline-block;
+  width: 100px;
+  padding: 15px 10px;
+  text-align: center;
+  color: white;
+  font-size: 12pt;
+}
+.nav-item a:hover {
+  background: #6488dc;
+}
+
+main {
+  padding: 20px;
+}
+
+.form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.harga-jumlah label {
+  margin: 0 10px 0 18px;
+}
+
+.harga-jumlah input {
+  width: 40%;
+}
+#barang-kasir,
+#barang,
+#id-barang,
+#total,
+.harga-jumlah {
+  box-sizing: border-box;
+}
+.barang-input {
+  position: relative;
+}
+.barang-input #barang-kasir {
+  width: 100%;
+}
+.barang-input .search-list {
+  position: absolute;
+  background: white;
+  border: solid #9b9b9b 1px;
+  width: 100%;
+  box-shadow: 0px 3px 5px 0px #6d6b6b6b;
+}
+.barang-input ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.barang-input li {
+  padding: 10px;
+  text-wrap-mode: nowrap;
+  cursor: pointer;
+}
+.barang-input li:hover {
+  background: #e4f8fa;
+}
+
+.input-harga {
+  width: calc(100% - 180px);
+  display: flex;
+  justify-content: space-between;
+}
+
+.input-data input,
+main.profil textarea {
+  height: 40px;
+  border-radius: 10px;
+  border: solid #9b9b9b 1px;
+  background: #f3f3f3;
+  padding: 0 10px;
+  font-size: 12pt;
+}
+.input-data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px auto;
+  width: 100%;
+}
+
+.form-data {
+  padding: 20px;
+}
+
+.form-data h1 {
+  margin-bottom: 20px;
+}
+
+.label-input {
+  width: 60px;
+  margin-bottom: 10px;
+}
+.input-id {
+  width: calc(100% - 90px);
+}
+#id-barang[readonly] {
+  background: #cacaca;
+}
+.harga {
+  width: 100%;
+}
+#id-barang {
+  width: 100%;
+}
+.max .harga {
+  width: 60%;
+  min-width: 175px;
+}
+.max .maximal-harga {
+  width: 25%;
+  min-width: 65px;
+}
+
+.form-data button,
+.struk-wrap button {
+  width: 150px;
+  height: 40px;
+  margin: 10px auto;
+}
+.struk-wrap button {
+  margin: 20px;
+}
+
+.data-id,
+.harga-wrap,
+#barang,
+.barang-input,
+#total,
+.harga-jumlah,
+.input-def {
+  width: calc(100% - 110px);
+}
+.data-harga,
+.data-id {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.tambah-max,
+.tambah-medsos {
+  display: flex;
+  width: 165px;
+  align-items: center;
+  justify-content: space-between;
+}
+.check {
+  display: inline-block;
+  vertical-align: middle;
+  width: 70px;
+}
+.check * {
+  vertical-align: middle;
+  display: inline;
+}
+.tambah-harga:hover,
+.delete-edit i:nth-of-type(2),
+.tambah-medsos .fa-plus {
+  color: rgb(46 168 96);
+}
+.hapus-harga:hover,
+.delete-edit i:nth-of-type(1),
+.tambah-medsos .fa-remove {
+  color: rgb(207, 0, 0);
+}
+.tambah-harga,
+.hapus-harga,
+.tambah-medsos div {
+  margin-left: 20px;
+  color: #828782;
+  font-size: 16pt;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  padding: 5px;
+}
+.tambah-medsos {
+  gap: 20px;
+  flex: 1;
+}
+.tambah-medsos div {
+  margin: 0;
+  width: 20px;
+  height: 20px;
+}
+alert {
+  color: red;
+}
+form button,
+.struk-wrap button,
+.alert-wrap button {
+  padding: 10px 15px;
+  background: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button.batal-btn {
+  background: #aaaaaa;
+  margin-right: 10px;
+  color: black;
+}
+.log li * {
+  border: solid 1px;
+  flex: 1x;
+}
+.item-harga .nominal-max {
+  width: 40%;
+}
+.item-harga .nominal-max div {
+  display: flex;
+}
+.download,
+.print-data {
+  width: fit-content;
+  float: right;
+  margin: 0 20px 20px 0;
+  color: blue;
+  cursor: pointer;
+}
+.table-container {
+  padding: 20px;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
+  vertical-align: top;
+}
+th {
+  background-color: #f4f4f4;
+}
+
+.delete-edit {
+  display: flex;
+  font-size: 16pt;
+  gap: 10px;
+  text-align: center;
+  flex-direction: row;
+  color: gray;
+}
+.list-item .delete-edit i {
+  cursor: pointer;
+  padding: 10px;
+}
+@media (max-width: 680px) {
+  .navbar .logo,
+  .navbar ul {
+    margin: 0;
+    justify-content: center;
+    gap: 10px 20px;
+  }
+  .search-filter .search-wrap {
+    width: 100%;
+  }
+  .search-filter .search {
+    width: 100%;
+  }
+  .search-filter .filter-check {
+    flex-wrap: wrap;
+    /* width: 100%; */
+    gap: 10px;
+  }
+  .search-filter .input-filter {
+    width: -webkit-fill-available;
+  }
+}
+
+@media (max-width: 670px) {
+  .navbar .menu-ic {
+    display: inline-block;
+    padding: 19px;
+  }
+  .navbar ul {
+    display: none;
+  }
+  .menu-toggle:checked + .menu-ic {
+    background: #7a66fc;
+    height: 100%;
+  }
+  .menu-toggle:checked ~ ul {
+    display: flex;
+    background: #7a66fc;
+    margin: 0;
+    width: 100%;
+    justify-content: space-between;
+  }
+  .input-data {
+    flex-wrap: wrap;
+  }
+  main.kasir #id-barang,
+  main.kasir #total,
+  main.kasir .harga-jumlah,
+  .data-id,
+  .harga-wrap,
+  #barang,
+  .barang-input,
+  .input-def,
+  .medsos-container {
+    width: 550px;
+  }
+  .medsos-wrap .medsos {
+    width: auto;
+  }
+  .medsos-wrap input {
+    width: 90%;
+  }
+}
+@media (max-width: 610px) {
+  .search-filter .filter-check {
+    width: 100%;
+  }
+}
+@media (max-width: 560px) {
+  .nav-item a {
+    padding: 10px;
+  }
+  .input-harga {
+    width: inherit;
+  }
+  .data-harga {
+    width: calc(90% + 35px);
+    flex-wrap: wrap;
+    margin: 15px 0;
+  }
+  .form-dat,
+  .table-container {
+    margin: 30px 0;
+  }
+  .form-data,
+  .table-container {
+    padding: 0;
+  }
+  .delete-edit {
+    font-size: 14pt !important;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 490px) {
+  .menu-toggle:checked ~ ul {
+    justify-content: space-evenly;
+  }
+  .item-data td div {
+    line-height: 1.5;
+    margin: 0 0 10px 0;
+  }
+  main.kasir .harga-jumlah {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  main.kasir .harga-jumlah input {
+    width: calc(100% - 20px);
+  }
+  main.kasir .harga-jumlah label {
+    margin: 0;
+  }
+}
+
+@media (max-width: 400px) {
+  .navbar {
+    padding: 5px;
+  }
+  .logo a {
+    font-size: large;
+  }
+  .navbar .menu-ic {
+    padding: 12px 19px;
+  }
+  .input-data {
+    margin: 10px auto;
+  }
+  .input-data input,
+  .medsos-wrap .medsos {
+    height: 30px;
+    border-radius: 5px;
+  }
+  main.profil textarea {
+    border-radius: 5px;
+  }
+  .form-container button {
+    height: auto;
+  }
+  .form-data,
+  .table-container {
+    padding: 0;
+    margin: 0;
+  }
+
+  .input-harga {
+    flex-wrap: wrap;
+  }
+  .input-harga.max {
+    flex-wrap: wrap;
+    height: 85px;
+  }
+
+  .data-harga {
+    flex-direction: column-reverse;
+    flex-wrap: nowrap;
+    padding: 10px;
+    width: calc(100% - 20px);
+    margin: 10px 0;
+    border: solid 1px grey;
+    border-radius: 10px;
+  }
+
+  .input-harga input,
+  .max input {
+    min-width: calc(100% - 20px) !important;
+  }
+
+  .data-tbl .id-tbl {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: auto;
+    scrollbar-width: thin;
+  }
+}

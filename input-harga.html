@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./style/main-style.css">
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="logo">
+        <a><span>Ka</span><i class="fa fa-dollar" aria-hidden="true"></i><span>ir</span></a>
+      </div>
+      <input type="checkbox" id="menu-toggle" class="menu-toggle">
+      <label for="menu-toggle" class="menu-ic">Menu</label>
+      <ul>
+        <li class="nav-item"><a href="./kasir.html">Kasir</a></li>
+        <li class="nav-item"><a href="./input-harga.html" style="background: #6352d5;">Input Harga</a></li>
+        <li class="nav-item"><a href="./laporan.html">Laporan</a></li>
+        <li class="nav-item"><a href="./profil.html">Profil</a></li>
+      </ul>
+    </nav>
+    <main>
+    <div class="form-container">
+      <form class="form-data">
+        <h1>Input Harga</h1>
+        <div class="input-data">
+          <label class="label-input">Id</label>
+          <div class="data-id">
+            <div class="input-id">
+              <input id="id-barang" type="number" required />
+            </div>
+            <label class="check">
+              <input type="checkbox" onchange="AutoId(event.target)" />
+              <div>Auto</div>
+            </label>
+          </div>
+        </div>
+        <div class="input-data">
+          <label for="barang" class="label-input">Barang</label>
+          <input id="barang" required />
+        </div>
+        <div class="input-data">
+          <label class="label-input">Harga</label>
+          <div class="harga-wrap">
+            <div class="data-harga">
+              <div class="input-harga">
+                <input class="harga" type="number" required />
+              </div>
+              <div class="tambah-max">
+                <label class="check">
+                  <input type="checkbox" onchange="TambahMax(event.target)" />
+                  <div>Max</div>
+                </label>
+                <div class="hapus-harga fa fa-remove" onclick="HapusHarga(event)"></div>
+                <div class="tambah-harga fa fa-plus" onclick="TambahHarga(event.target)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button>Tambah Data</button>
+      </form>
+      <div class="download">Download Data <i class="fa fa-download" aria-hidden="true"></i></div>
+      <div class="table-container">        
+      </div>
+    </div>
+    </main>
+    <script>
+      const dataHargaKey = "harga-kasir";
+
+      const setJSON = (str) => {
+        return JSON.stringify(str);
+      };
+
+      const getJSON = (jsn) => {
+        return JSON.parse(jsn);
+      };
+
+      const GetSet_DataLocal = (gs, val = "") => {
+        if (gs === "get") return localStorage.getItem(dataHargaKey);
+        else if (gs === "set") localStorage.setItem(dataHargaKey, val);
+      };
+      if(typeof Storage !== "undefined"){
+        
+
+      console.log(window)
+      let dataHarga = []
+      let isEdited = false
+      let isCancleEdit = false
+      const maxInput = document.querySelector('.data-harga').outerHTML
+      let log = ""
+      const dataHargaDef = document.querySelector(".data-harga").innerHTML
+      const alertEl = () => document.querySelector("alert")
+      let checkEl = false
+
+      function HapusListHarga(e){
+        const eTarget = e.target
+        const trTable =  eTarget.parentElement.closest("tr")
+        const getId = trTable.querySelector('.data-id-list').idData
+        trTable.remove()
+        document.querySelectorAll('.table-container .item-data').forEach((tr, index)=>        
+        tr.firstElementChild.innerText=index+1
+        )
+        dataHarga = dataHarga.filter(item => item.id != getId);
+        GetSet_DataLocal('set', setJSON(dataHarga))
+        /*console.log(getId, dataKasir.filter(item => item.id != getId))*/        
+      }
+
+      function EditListHarga(e){
+        isEdited=false
+        console.log(isEdited)
+        const eTarget = e.target
+        const trTable =  eTarget.parentElement.closest("tr")
+        const getId = trTable.querySelector('.data-id-list').idData
+        const formData =  eTarget.parentElement.closest("body").querySelector('.form-data')        
+        const formId = formData.querySelector('#id-barang')
+        const formBarang = formData.querySelector('#barang')
+//console.log(formMaxAdd)
+        const formDataHarga = formData.querySelector('.harga-wrap')
+        formDataHarga.replaceChildren()
+        //formDataHarga.insertAdjacentHTML('beforeend',dataHargaDef)
+        console.log(getId, dataHarga)
+        const getData = dataHarga.filter(item => item.id == getId)[0];
+
+        formId.value = getId
+        formBarang.value = getData.barang
+
+        if(!isEdited){
+        isEdited=true
+        const batalBtn = formData.querySelector('.batal-btn')
+        if(batalBtn) batalBtn.remove()
+          getData.harga.forEach((hrg, index)=>{
+        const formMaxAdd = formData.querySelectorAll('.data-harga input[type=checkbox]')
+        const formHargaTambah = formData.querySelectorAll('.data-harga .tambah-harga')
+          
+          if(hrg.max !== false){
+            console.log(index,hrg.max !== false)
+            //formMaxAdd[index].checked = true
+            //TambahHarga(formHargaTambah[index])
+            formDataHarga.insertAdjacentHTML('beforeend',`<div class="data-harga">
+              <div class="input-harga max">
+                <input class="harga" type="number" required="">
+              <input class="maximal-harga" type="number" required=""></div>
+              <div class="tambah-max">
+                <label class="check">
+                  <input type="checkbox" onchange="TambahMax(event.target)" checked>
+                  <div>Max</div>
+                </label>
+                <div class="hapus-harga fa fa-remove" onclick="HapusHarga(event)" style="color: rgb(207, 0, 0);"></div>
+                <div class="tambah-harga fa fa-plus" onclick="TambahHarga(event.target)" style="color: rgb(44, 183, 98);"></div>
+              </div>
+            </div>`)
+          }
+          if(hrg.max === false){
+            console.log(index,hrg.max !== false)
+            //formMaxAdd[index].checked = false
+            formDataHarga.insertAdjacentHTML('beforeend',`<div class="data-harga">
+              <div class="input-harga">
+                <input class="harga" type="number" required="">
+              </div>
+              <div class="tambah-max">
+                <label class="check">
+                  <input type="checkbox" onchange="TambahMax(event.target)">
+                  <div>Max</div>
+                </label>
+                <div class="hapus-harga fa fa-remove" onclick="HapusHarga(event)" style=""></div>
+                <div class="tambah-harga fa fa-plus" onclick="TambahHarga(event.target)" style=""></div>
+              </div>
+            </div>`)
+            //TambahMax(formMaxAdd[index])  
+             //TambahHarga(formHargaTambah[index])       
+          }
+//TambahMax(formMaxAdd[index])
+          const formHarga = formData.querySelectorAll('.input-harga')[index].querySelectorAll('input')
+          formHarga[0].value=hrg.nominal
+        if(hrg.max !== false) formHarga[1].value=hrg.max
+          
+          //TambahHarga(formHargaTambah[index])
+          
+        })
+        formData.querySelector('button').insertAdjacentHTML('beforeBegin', '<button class="batal-btn" onclick="Batal(event)">Batal</button>')
+
+      }/**/
+        //const getId = trTable.querySelector('.data-id-list').innerText
+        //AutoId(autoId)
+        
+      }
+
+        function inputReq (etarget,tf){
+        etarget.querySelectorAll(tf ? 'input:not([type=checkbox])' : 'input[required]').forEach((req)=>{
+          req.required = tf
+          if(tf) console.log('rek')
+        })
+      }
+
+      function Batal(e){
+      inputReq(e.target.parentElement, false)
+        console.log(e)
+        isCancleEdit = true
+       
+      }
+
+      function ShowData(pos='resize'){
+      
+      //console.log(dataKasir)
+        let tableData = ''
+        let itemId = []
+       try{ 
+        dataHarga.forEach((item, index)=>{
+          let listHarga = ''
+
+          item.harga.forEach((hrg)=>{
+            listHarga += `<tr class='item-harga'>
+              <td class=nominal-max>${hrg.nominal}</td>
+              <td class=nominal-max>${hrg.max}</td>
+            </tr>`
+            return  listHarga
+          })
+          itemId.push(item.id) 
+          if(window.outerWidth >= 490){
+          tableData = `<tr class='item-data'>
+            <td>${index+1}</td>
+            <td class="data-id-list">${item.id}</td>
+            <td>${item.barang}</td>
+            <td>
+              <table><tbody>${listHarga}</tbody></table>
+            </td>
+            <td>
+              <div class="delete-edit">
+                <i class="fa fa-remove" aria-hidden="true" onClick=HapusListHarga(event)></i>
+                <i class="fa fa-pencil" aria-hidden="true" onClick=EditListHarga(event)></i>
+              </div>
+            </td>
+            </tr>`
+          }
+          else {
+            tableData = `<tr class='item-data'>
+            <td>${index+1}</td>
+            <td>
+              <div>Id : <b class="data-id-list">${item.id}</b></div>
+              <div>Barang : <b>${item.barang}</b></div>
+              <table>
+                <tbody>
+                  <thead>
+                    <tr>
+                      <th>Harga</th>
+                      <th>Max</th>
+                    </tr>
+                  </thead>
+                  ${listHarga}
+                </tbody>
+              </table>
+            </td>
+            <td>
+              <div class="delete-edit">
+                <i class="fa fa-remove" aria-hidden="true" onClick=HapusListHarga(event)></i>
+                <i class="fa fa-pencil" aria-hidden="true" onClick=EditListHarga(event)></i>
+              </div>
+            </td>
+            </tr>`
+          } 
+
+          if(pos === 'resize') document.querySelector('.table-data').insertAdjacentHTML('beforeend',tableData)
+          
+
+         })
+        }catch(err){}
+        if(pos === 'submit' && !isEdited) document.querySelector('.table-data').insertAdjacentHTML('beforeend',tableData)
+        itemId.forEach((id, index)=>{document.querySelectorAll('.table-data .data-id-list')[index].idData = id})
+        //console.log(tableData)
+      }
+      
+
+      function CreateTable(){
+        if(window.outerWidth <= 490){ 
+          document.querySelector('.table-container').replaceChildren()
+          document.querySelector('.table-container').insertAdjacentHTML('afterbegin',`<table>
+            <thead>
+                <tr>
+                    <th style="width:10%">No.</th>
+                    <th style="width:75%">Data</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="table-data"></tbody>
+        </table>`)
+        }
+        else{ 
+          document.querySelector('.table-container').replaceChildren()
+          document.querySelector('.table-container').insertAdjacentHTML('afterbegin',`<table>
+            <thead>
+                <tr>
+                    <th style="width:10%">No.</th>
+                    <th style="width:15%">ID</th>
+                    <th style="width:30%">Barang</th>
+                    <th style="width:45%">Harga   ||   Maximal </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody class="table-data"></tbody>
+        </table>`)
+        }
+      }
+
+      if(GetSet_DataLocal('get'))dataHarga = getJSON(GetSet_DataLocal('get'))
+
+      CreateTable()
+      ShowData()
+
+      window.addEventListener('resize',(e)=>{       
+        CreateTable()
+        ShowData(e.type)
+      })
+      document.querySelector(".form-data").addEventListener("keydown", () => {
+        //e.preventDefault()
+        if (alertEl()) alertEl().remove()
+      })
+      document.querySelector(".form-data").addEventListener("submit", (e) => {
+        e.preventDefault()
+        const eTarget = e.target
+        const id_barang = eTarget.querySelectorAll("form input[id]")
+        const idBtn = eTarget.querySelector('.check input')
+        const hargaWrap = eTarget.querySelector('.harga-wrap')
+
+        if(isCancleEdit) eTarget.querySelector('.batal-btn').remove()
+        
+        
+        else {
+          if(eTarget.querySelector('.batal-btn')) eTarget.querySelector('.batal-btn').remove()
+          const hasil = {id: id_barang[0].value, barang: id_barang[1].value, harga:[]}
+        eTarget.querySelectorAll(".input-harga").forEach((item) => {
+          if (item.childElementCount > 1)
+            hasil.harga.push({nominal: item.children[0].value, max: item.children[1].value})
+          else
+            hasil.harga.push({nominal: item.children[0].value, max: item.parentElement.querySelector(".check input").checked})
+        })
+          console.log('edited',isEdited)
+
+        if(isEdited && !isCancleEdit){
+          const indexDt = dataHarga.findIndex(item => item.id == id_barang[0].value);
+          console.log(indexDt)
+         if (indexDt > -1) dataHarga[indexDt] = hasil      
+        GetSet_DataLocal('set',setJSON(dataHarga))
+         CreateTable()
+         ShowData()          
+        }
+        else {
+          console.log(dataHarga, hasil)
+          dataHarga.push(hasil)      
+          GetSet_DataLocal('set',setJSON(dataHarga))
+          ShowData(e.type)
+        }
+      }
+        console.log(dataHarga)        
+        AutoId(idBtn)
+        id_barang[1].value =''
+        hargaWrap.replaceChildren()
+        hargaWrap.insertAdjacentHTML("beforeend", maxInput)
+
+        inputReq(eTarget, true)
+        isCancleEdit = false
+        isEdited = false
+        //document.querySelector('.log').innerHTML = JSON.stringify(dataKasir)
+      })
+
+      function AutoId(e) {
+        const idInput = document.querySelector("input#id-barang")
+        if (e.checked) {
+          idInput.value = new Date().getTime()
+          idInput.readOnly = true
+        } else {
+          idInput.value = ""
+          idInput.readOnly = false
+        }
+      } 
+
+      function TambahMax(e, fromTambahHarga = false, inputMax = true) {
+        //console.log(e)
+        const eTarget = e
+        //console.log(eTarget.parentElement.parentElement.previousElementSibling)
+        const nextSibling = eTarget.parentElement.nextElementSibling
+        const hapusHargaSty = nextSibling.style
+        const tambahHargaSty = nextSibling.nextElementSibling.style
+        const inputHarga = eTarget.parentElement.parentElement.previousElementSibling
+        if (alertEl()) alertEl().remove()
+//console.log(isEdited && !inputMax)
+        if (e.checked || (isEdited && !inputMax)) {
+          checkEl = true
+          e.checked = true
+          //inputHarga.children[0].value.length > 0)
+          if(inputMax || (isEdited && !inputMax))inputHarga.classList.add("max")
+          if(!fromTambahHarga || (isEdited && !inputMax)){
+
+            inputHarga.insertAdjacentHTML(
+            "beforeend",
+            '<input class="maximal-harga" type=number required>',
+          )}
+          hapusHargaSty.color = "#cf0000"
+          tambahHargaSty.color = "#2cb762"
+        } else {
+          checkEl = false
+          /**/if(document.querySelectorAll('form .input-harga:not(:has(> .maximal-harga))').length > 0){ 
+            document
+            .querySelector(".harga-wrap")
+            .insertAdjacentHTML(
+              "beforeend",
+              "<alert>* Tidak bisa tambah tanpa max lebih dari 1</alert>",
+            )
+            e.checked = true
+          }
+          else{
+          inputHarga.classList.remove("max")
+          inputHarga.lastChild.remove()
+         // if (document.querySelectorAll(".data-harga").length < 2)
+            hapusHargaSty.color = ""
+          tambahHargaSty.color = ""
+        }
+        }
+        // console.log('cekel',checkEl)
+      }
+
+      function TambahHarga(e) {
+        const checkBox = e
+          .closest(".tambah-max")
+          .querySelector("label input")
+        //console.log("leng", document.querySelectorAll(".data-harga").length)
+        //checkEl.remove()
+        //e.target.parentElement.firstElementChild.remove()
+        if (alertEl()) alertEl().remove()
+        let ifEdit = true
+        if(isEdited) ifEdit = document.querySelectorAll(".data-harga").length > 0
+        else ifEdit = checkBox.checked && checkEl && document.querySelectorAll(".data-harga").length > 0
+        // if(checkBox.checked){ }
+        if (ifEdit) {
+          //
+          e.closest(".data-harga")
+            .insertAdjacentHTML(
+              "afterend",
+              e.closest(".data-harga").outerHTML
+            )
+            console.log('th', e.closest(".data-harga").querySelector('.max') !== null)
+          e.closest(".data-harga").nextElementSibling.querySelector(".check input").checked = e.closest(".data-harga").querySelector('.max') !== null
+          if(isEdited)TambahMax(e.closest(".data-harga").nextElementSibling.querySelector(".check input"), true, e.closest(".data-harga").querySelector('.max') !== null)
+          /*console.log(
+            "tambah harga",
+            e.target
+              .closest(".harga-wrap")
+              .lastElementChild.querySelector(".tambah-max input"),
+          )*/
+          //document.querySelector('.harga-wrap').insertAdjacentHTML('beforeend', dataHarga)
+          const tombolMaxChild = e
+            .closest(".data-harga")
+            .nextElementSibling.querySelector(".hapus-harga")
+          tombolMaxChild.style.color = "#cf0000"
+          //console.log("tombol", tombolMaxChild)
+        } else{
+          document
+            .querySelector(".harga-wrap")
+            .insertAdjacentHTML(
+              "beforeend",
+              "<alert>* Tidak bisa tambah harga tanpa max</alert>",
+            )
+          }
+          //isEdited = true
+      }
+
+      function HapusHarga(e) {
+        console.log(e)
+        const checkBox = e.target
+          .closest(".tambah-max")
+          .querySelector("label input")
+        if (alertEl()) alertEl().remove()
+        if (
+          (checkBox.checked &&
+            document.querySelectorAll(".data-harga").length > 1) ||
+          document.querySelectorAll(".data-harga").length > 1
+        ) {
+          e.target.parentElement.parentElement.remove()
+          //console.log(e.target.parentElement.parentElement.nextElementSibling.lastElementChild.children[1])
+
+          //console.log(document.querySelectorAll('.data-harga').length)
+        }
+        //if(document.querySelectorAll('.data-harga').length > 1) e.target.parentElement.parentElement.remove()
+        else
+          document
+            .querySelector(".harga-wrap")
+            .insertAdjacentHTML(
+              "beforeend",
+              "<alert>* Tidak bisa hapus satu harga</alert>",
+            )
+        }
+
+        document.querySelector('div.download').addEventListener('click',()=>{         
+          
+          const jsonString = setJSON(dataHarga);
+          const blob = new Blob([jsonString], { type: 'application/json' });
+          const link = document.createElement('a');
+          
+          link.download = 'data-harga.json';
+          link.href = URL.createObjectURL(blob);
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+      }
+      else alert("Browser Tidak Suport")
+    </script>
+  </body>
+</html>

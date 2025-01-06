@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./style/main-style.css">
+        <link rel="stylesheet" href="./style/laporan-style.css">
+      </head>
+    <body>
+        <nav class="navbar">
+          <div class="logo">
+            <a><span>Ka</span><i class="fa fa-dollar" aria-hidden="true"></i><span>ir</span></a>
+          </div>
+          <input type="checkbox" id="menu-toggle" class="menu-toggle">
+          <label for="menu-toggle" class="menu-ic">Menu</label>
+          <ul>
+            <li class="nav-item"><a href="./kasir.html">Kasir</a></li>
+            <li class="nav-item"><a href="./input-harga.html">Input Harga</a></li>
+            <li class="nav-item"><a href="./laporan.html" style="background: #6352d5;">Laporan</a></li>
+            <li class="nav-item"><a href="./profil.html">Profil</a></li>
+          </ul>
+        </nav>        
+        <div class="tab-bar">
+          <ul>
+            <li class="tab-item" style="background: #f4f4f9;"><a>Pembelian Barang</a></li>
+            <li class="tab-item"><a href="./daftar-struk.html">Daftar Struk</a></li>
+          </ul>
+          <div class="search-filter">
+            <form>
+              <div class="search-wrap">
+                <input class="search">
+                <button class="fa fa-search"></button>
+              </div>
+            <div>
+              <details class="filter">
+                <summary>Filter</summary>
+                <div class="filter-wrap">
+                  <div class="filter-check">
+                    <label class="input-sort">
+                      <div class="filter-spesifik">
+                        <input id="spesifik" type="radio" onclick="FilterInput(event)" name="sort">
+                        <span>Spesifik</span>
+                      </div>
+                    </label>
+                    <label class="input-sort">
+                      <div class="filter-bulan">
+                        <input id="bulan" type="radio" onclick="FilterInput(event)" name="sort">
+                        <span>Bulan</span>
+                      </div>
+                    </label>
+                    <label class="input-sort">
+                      <div class="filter-tahun">
+                        <input id="tahun" type="radio" onclick="FilterInput(event)" name="sort">
+                        <span>Tahun</span>
+                      </div>
+                    </label>
+                  </div>
+                  <div class="input-filter"></div>
+                </div>
+              </details>
+            </div>
+            </form>
+        </div>
+        </div>
+        <main>
+          <div class="data-wrap">
+            <div class="head-wrap">
+              <div>
+                <div class="data-head">
+                    <span>Data : </span><b></b>
+                </div>
+              </div>
+              <div class="print-download" style="display:flex; gap:20px">
+                <div class="print-data" style="margin-right: 0;">Print Data <i class="fa fa-print" aria-hidden="true"></i></i></div>
+                <div class="download" style="margin-right: 0;">Download Data <i class="fa fa-download" aria-hidden="true"></i></div>
+              </div>
+            </div>
+            <table class="data-tbl">
+              <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Id</th><th>Barang</th>
+                    <th>Total QTY</th>
+                    <th>Sub Total</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+          </table>
+          </div>
+        </main>
+        <script>
+          //document.querySelector('.filter-wrap details').addEventListener('toggle', () => {
+          //  console.log('Details 2 is now', details2.open ? 'open' : 'closed');
+       //   });
+
+          const dataHargaKey = "harga-kasir";
+          const strukKasirKey = "struk-kasir"
+          
+          const dateVal = [
+            String(new Date().getDate()).padStart(2, '0'),
+            String(new Date().getMonth()+1).padStart(2, '0'),
+            new Date().getFullYear()
+          ]
+
+          const checkFilter = {}
+    
+          const setJSON = (str) => {
+            return JSON.stringify(str);
+          };
+    
+          const getJSON = (jsn) => {
+            return JSON.parse(jsn);
+          };
+    
+          const GetSet_DataLocalHarga = (gs, val = "") => {
+            if (gs === "get") return localStorage.getItem(dataHargaKey);
+            else if (gs === "set") localStorage.setItem(dataHargaKey, val);
+          };
+          const GetSet_DataLocalStruk = (gs, val = "") => {
+            if (gs === "get") return localStorage.getItem(strukKasirKey);
+            else if (gs === "set") localStorage.setItem(strukKasirKey, val);
+          };
+          
+          
+          function FilterInput(e){
+            const eTarget = e.target
+            const filterCheck = eTarget.parentElement.closest('.filter-check')
+            const outputMap = new Map();
+            filterCheck.nextElementSibling.replaceChildren()
+            //console.log(filterCheck.querySelectorAll('input'))
+            //console.log(eTarget,eTarget.parentElement.className === 'filter-spesifik')
+
+            if(eTarget.checked){  
+              checkFilter.id = eTarget.id
+              checkFilter.check = true
+              /**/filterCheck.querySelectorAll('label').forEach((sty)=>{ 
+                if(sty.style.background.length > 0){
+                  sty.style = "" 
+                //sty.querySelector('input').checked = false
+                  
+                }
+                //console.log()
+              })
+              eTarget.parentElement.closest('label').style = "background:#bdbdbd"               
+              if(eTarget.parentElement.className === 'filter-spesifik'){
+                  filterCheck.nextElementSibling.insertAdjacentHTML('beforeend',`<input type="date" value="${dateVal[2]}-${dateVal[1]}-${dateVal[0]}">`)
+                  eTarget.parentElement.closest('form').querySelector('input.search').placeholder = 'Cari data : ' + `${dateVal[0]}${dateVal[1]}${dateVal[2]}`
+                  //filterCheck.querySelectorAll('input')[2].checked = false
+                //console.log(eTarget.parentElement.closest('.filter-check')) 
+              }
+              else{
+                filterCheck.querySelector('.filter-spesifik input').checked = false
+
+                try{
+                  filterCheck.nextElementSibling.querySelector('input[type=date]').remove()
+                }catch(err){}
+
+                if(eTarget.parentElement.className === 'filter-bulan'){
+                  filterCheck.nextElementSibling.insertAdjacentHTML('beforeend',`<input type="month" value="${dateVal[2]}-${dateVal[1]}">`)
+                  eTarget.parentElement.closest('form').querySelector('input.search').placeholder = 'Cari data : ' + `${dateVal[1]}${dateVal[2]}`
+                }
+                if(eTarget.parentElement.className === 'filter-tahun'){
+                  filterCheck.nextElementSibling.insertAdjacentHTML('beforeend',`<input type="number" value=${dateVal[2]}>`)
+                  eTarget.parentElement.closest('form').querySelector('input.search').placeholder = 'Cari data : ' + dateVal[2]
+                }
+              }
+              const inputFilter = filterCheck.nextElementSibling.children[0]
+              for(let i=0; i<(inputFilter.type === 'number' ? 2 : 1);i++){
+                inputFilter.addEventListener(i===0? 'change': 'keyup', (efi)=>{
+                  //console.log(filterCheck.nextElementSibling.children[0].type)                
+                  eTarget.parentElement.closest('form').querySelector('input.search').placeholder = 'Cari data : ' + efi.target.value.split('-').toReversed().join('')
+                })
+              }              
+            }else {
+              eTarget.parentElement.closest('label').style = ''
+            }/**/
+                       
+          }
+
+          if(typeof Storage !== "undefined"){
+              
+              const dataHarga = getJSON(GetSet_DataLocalHarga('get'))
+              const dataStruk = getJSON(GetSet_DataLocalStruk('get'))
+
+              let dataDownload = {
+                pencarian : {textQuery : false, filter: false},
+                hasil : []
+            }              
+
+            document.querySelector('.search-filter form').addEventListener('submit',(e)=>{
+              e.preventDefault()
+
+              const inputForm = {
+                textQuery : e.target.querySelector('.search-wrap input'),
+                filterQuery : e.target.querySelector('.input-filter input[type]')
+              }
+              const textQueryInput = {
+                length : inputForm.textQuery.value.length,
+                query : inputForm.textQuery.value.toLowerCase().trim()
+              }
+              
+              if(checkFilter.check || textQueryInput.length > 0){
+                document.querySelector('main .data-tbl tbody').replaceChildren()
+                dataDownload = {
+                  pencarian : {textQuery : false, filter: false},
+                  hasil : []
+              } 
+                try{document.querySelector('main .data-head div').remove()}catch(err){}
+                document.querySelector('main .data-head b').outerHTML += textQueryInput.length > 0 ? `<div><span>Pencarian : </span><b>" <i>${inputForm.textQuery.value}<i> "</b></div>` : ''
+                
+              }             
+
+              if(checkFilter.check){
+                console.log(inputForm.filterQuery.value)
+                let filterQuer = [inputForm.filterQuery.value.split('-'), '']
+                                
+                if(checkFilter.id === 'spesifik') filterQuer[1] =  `${filterQuer[0][2]}${filterQuer[0][1]}${filterQuer[0][0]}`
+                if(checkFilter.id === 'bulan') filterQuer[1] =  `${filterQuer[0][1]}${filterQuer[0][0]}`
+                if(checkFilter.id === 'tahun') filterQuer[1] =   filterQuer[0][0]
+
+                dataDownload.pencarian= {
+                  filter :filterQuer[1],
+                  textQuery: textQueryInput.length > 0 ? textQueryInput.query : false
+                }
+
+                document.querySelector('main .data-head b').innerHTML = filterQuer[1]
+
+                //console.log(filterQuer)
+                let idStrukDate = false
+                dataStruk.forEach((item, idx)=>{
+                  if(item.idDate.includes(filterQuer[1])) {
+                    console.log(item)
+                    ShowData({filterIndex:idx, textQuery :textQueryInput.length > 0 ? textQueryInput.query : false})
+                    idStrukDate = true
+                  }
+                })
+
+                if(!idStrukDate) document.querySelector('main .data-tbl tbody').insertAdjacentHTML(
+                'beforeend', `<tr class='no-data'><td colspan="5"><alert>Data ${filterQuer[1]} tidak ada</alert></td></tr>`
+                )          
+              }
+              else{
+                if(textQueryInput.length > 0) {
+                  dataDownload.pencarian.textQuery = textQueryInput.query
+                  console.log('textQueryInput',textQueryInput)
+                  ShowData({filterIndex: false, textQuery : textQueryInput.query})
+                }
+              }
+              
+              e.target.children[1].querySelector('details.filter').open = false
+              
+            })
+
+            function ShowData(qry = {filterIndex:false, textQuery:false}){
+              let indexData = qry.filterIndex === false ? dataStruk.length-1 : qry.filterIndex
+              console.log('par show '+ qry.filterIndex, qry)
+              const strukBeli = ()=>{
+                let beli = []
+
+                dataStruk[indexData].order.forEach((dtStruk)=>{
+                  dtStruk.pembelian.forEach((itemBeli)=>{
+                    beli.push(itemBeli)
+                  })
+                })
+                return beli
+              }
+              
+              if(qry.filterIndex === false) document.querySelector('main .data-head b').textContent = dataStruk[indexData].idDate
+
+              let laporTD = []  
+              let no_total = {
+                no:0,
+                qty:0,
+                sub:0
+              }
+
+                let beda = []
+                //console.log(strukBeli()[0].sama)
+              /*const dataLaporan = */dataHarga.forEach((dtHarga) => {
+                strukBeli().forEach((dtStruk)=>{
+                  if(dtStruk.idBarang == dtHarga.id) {
+                    dtStruk.sama = true
+                  }
+                })
+
+                const totalQty = dataStruk[indexData].order.reduce((sum, dtStruk) => {
+                  const item = dtStruk.pembelian.find((p) => p.idBarang == dtHarga.id);                  
+                  return (sum + (item ? parseInt(item.qty) : 0));
+                }, 0);
+                
+                const totalSub = dataStruk[indexData].order.reduce((sum, dtStruk) => {
+                  const item = dtStruk.pembelian.find((p) => p.idBarang == dtHarga.id);
+                  return (sum + (item ? parseInt(item.subTotal) : 0));
+                }, 0);
+
+                /*const gx = dataStruk[indexData].order.reduce((sum, dtStruk) => {
+                  const item = dtStruk.pembelian.find((p) => p.idBarang == dtHarga.id);
+                  try{
+                    console.log(item.idBarang, dtHarga.id)
+                  }catch(err){}
+                  return (sum + (item ? parseInt(item.subTotal) : 0));
+                }, 0);*/
+                
+                /*dataStruk[indexData].order.forEach((dtStruk)=>{
+                  dtStruk.pembelian.forEach((beli)=>{
+                    console.log(beli)
+                  })
+                })*/
+
+                //console.log(gx)
+                
+                if(totalQty > 0){
+                  laporTD.push( {idBarang: dtHarga.id, barang: dtHarga.barang, qty: totalQty, subTotal: totalSub});
+                }
+              });
+              
+                
+              beda = (strukBeli().filter(sm=>!sm.sama))
+              laporTD = [...laporTD, ...beda]
+              let dataColect = []
+              /**/laporTD.forEach((bData)=>{
+
+                if(!qry.textQuery || bData.barang.toLowerCase().includes(qry.textQuery)){
+                  no_total.no++                
+                  no_total.qty += parseInt(bData.qty)
+                  no_total.sub += parseInt(bData.subTotal)
+
+                  dataColect.push({
+                    idBarang : bData.idBarang,
+                    barang : bData.barang,
+                    qty : bData.qty,
+                    subTotal : bData.subTotal
+                  })
+                  
+                    document.querySelector('main .data-tbl tbody').insertAdjacentHTML(
+                    'beforeend',
+                    `<tr>
+                      <td>${no_total.no}</td>
+                      <td class="id-tbl">${bData.idBarang}</td>
+                      <td>${bData.barang}</td>
+                      <td>${bData.qty}</td>
+                      <td>${parseInt(bData.subTotal).toLocaleString('id-ID')}</td>
+                    </tr>`
+                  )
+                }
+
+              })
+                //console.log('data colect',dataDownload)
+
+              if(no_total.no < 1) document.querySelector('main .data-tbl tbody').insertAdjacentHTML(
+                'beforeend', 
+              `<tr class='no-data'><td colspan="5"><alert>Data Tgl. ${dataStruk[indexData].idDate} tidak ada</alert></td></tr>`
+              )
+              else{              
+              dataDownload.hasil.push({
+                idDate : dataStruk[indexData].idDate, 
+                dataLapor : dataColect, 
+                total : {
+                  qty: no_total.qty, 
+                  pendapatan : no_total.sub
+                }
+              })
+              document.querySelector('main .data-tbl tbody').insertAdjacentHTML(
+                'beforeend',
+                `<tr class="total-tbl">
+                    <td colspan=3 style="text-align: end;"><b>Total Tgl. ${dataStruk[indexData].idDate}</b></td>
+                    <td><b>${no_total.qty}</b></td>
+                    <td><b>${no_total.sub.toLocaleString('id-ID')}</b></td>
+                  </tr>`
+              )}
+              //console.log(fe)
+
+              //console.log(dataStruk[indexData].order)
+              
+            }
+            
+            ShowData()
+            document.querySelector('div.print-data').addEventListener('click',()=>{
+              const content = document.querySelector('.data-wrap')
+              console.log(content.children)
+              document.body.innerHTML=(content.children[0].children[0].outerHTML)+(content.children[1].outerHTML)
+              window.print();
+            })
+
+            document.querySelector('div.download').addEventListener('click',()=>{   
+              console.log(dataDownload)      
+              /**/
+              const jsonString = setJSON(dataDownload);
+              const blob = new Blob([jsonString], { type: 'application/json' });
+              const link = document.createElement('a');
+
+              link.download = 'data-laporan-struk.json';
+              link.href = URL.createObjectURL(blob);
+
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            })
+          }
+          else alert('Browser Tidak Mendukung')
+        </script>
+    </body>
+</html>

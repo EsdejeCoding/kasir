@@ -1,0 +1,62 @@
+main.kasir #id-barang {
+    width: calc(100% - 110px);
+  }
+  main.kasir .harga-jumlah {
+    display: flex;
+    align-items: center;
+  }
+  .alert-block {
+    position: fixed;
+    top: 0;
+    z-index: 2000;
+    background: #808080ab;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+  }
+  
+  .alert-wrap {
+    width: 300px;
+    background: white;
+    padding-bottom: 20px;
+    border-radius: 10px;
+    border: solid 1px gray;
+    box-shadow: 0px 3px 5px 0px #00000042;
+    margin: auto;
+  }
+  
+  .alert-head {
+    background: #715fea;
+    color: white;
+    padding: 15px;
+  }
+  
+  .alert-text,
+  .alert-wrap .batal-btn {
+    margin: 20px 20px 0;
+  }
+  .qty-barang {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+  }
+  .qty-barang span {
+    flex: 1;
+  }
+  .qty-barang span:nth-child(4),
+  .qty-barang span.struk-sub {
+    text-align: end;
+  }
+  .struk-total,
+  .struk-bayar,
+  .struk-kembalian {
+    display: flex;
+    justify-content: flex-end;
+    gap: 50px;
+    text-align: end;
+    margin-right: 55px;
+  }
+  

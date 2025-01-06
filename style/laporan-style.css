@@ -1,0 +1,106 @@
+
+.tab-bar ul {
+    display: flex;
+    margin: 0;
+  }
+  
+  .tab-bar {
+    background: #dcdcdc;
+    display: flex;
+    justify-content: space-between;
+    height: 80px;
+    align-items: center;
+  }
+  
+  .tab-item a {
+    display: inline-block;
+    padding: 31px 10px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .search-filter {
+    float: right;
+    padding: 10px;
+    width: 300px;
+  }
+  .search-filter .search-wrap {
+    display: flex;
+    margin-bottom: 10px;
+  }
+  .search-filter .search {
+    width: 250px;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+  .search-filter .search-wrap button {
+    border-radius: 0;
+    height: 30px;
+    font-size: small;
+    width: 50px;
+  }
+  .search-filter .filter summary {
+    cursor: pointer;
+  }
+  .search-filter .filter-wrap {
+    position: absolute;
+    padding: 0 5px;
+    width: -webkit-fill-available;
+  }
+  .search-filter .filter-check {
+    display: flex;
+    background: #dcdcdc;
+    width: 300px;
+    justify-content: space-between;
+  }
+  .search-filter label.input-sort {
+    padding-right: 10px;
+    cursor: pointer;
+  }
+  .search-filter .input-filter {
+    position: absolute;
+    background: #c7c3c3;
+    width: 300px;
+  }
+  .search-filter .input-filter input {
+    width: calc(100% - 20px);
+    height: 20px;
+    margin: 10px;
+  }
+  .data-tbl thead th {
+    background: #e7e7e7;
+  }
+  .data-tbl .total-tbl {
+    background: #d2d9fa;
+    border-bottom: solid;
+  }
+  .data-tbl .no-data {
+    background: #ffe7bd;
+    border-bottom: solid;
+  }
+  .daftar-struk ol {
+    padding: 0;
+  }
+  .daftar-struk .list-item {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: solid 1px #a7a5a5;
+    align-items: center;
+    padding: 0 20px;
+    gap: 20px;
+  }
+  .daftar-struk .list-item:hover {
+    background: #dee7ff;
+  }
+  .daftar-struk .list-wrap {
+    flex: 10;
+    cursor: pointer;
+    padding: 20px;
+    text-decoration: none;
+    color: inherit;
+  }
+  .data-wrap .head-wrap,
+  .daftar-struk .head-wrap {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }

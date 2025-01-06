@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <style>
+        .struk-ident{
+          display: flex;
+          gap: 15px;
+        }
+        .struk-ident span:nth-child(1) {
+          width: 100px;
+        }
+        .qty-barang {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+        }
+        .qty-barang span{
+            flex: 1;
+        }
+        .qty-barang span:nth-child(4), .qty-barang span.struk-sub{
+            text-align: end;
+        }
+        .struk-total, .struk-bayar, .struk-kembalian {
+            display: flex;
+            justify-content: space-between;
+            gap: 50px;
+            text-align: end;
+        }
+      </style>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+      <main style="font-family: monospace;font-size: 11pt; padding:0 10px;"></main>
+      <script>
+          const strukKasirKey = "struk-kasir"
+          const profilKey = 'profil-kasir'
+    
+          const setJSON = (str) => {
+            return JSON.stringify(str);
+          };
+    
+          const getJSON = (jsn) => {
+            return JSON.parse(jsn);
+          };
+
+          const GetSet_DataLocal = (gs, val = "") => {
+            if (gs === "get") return localStorage.getItem(strukKasirKey);
+            else if (gs === "set") localStorage.setItem(strukKasirKey, val);
+          };
+          const GetSet_DataLocalProfil = (gs, val = "") => {
+            if (gs === "get") return localStorage.getItem(profilKey);
+            else if (gs === "set") localStorage.setItem(profilKey, val);
+          };
+
+          if(typeof Storage !== "undefined"){
+              const profil = getJSON(GetSet_DataLocalProfil('get'))
+
+              const dateId = document.URL.split('#')[1].split('-')
+              const dataStrukHarian = getJSON(GetSet_DataLocal('get')).filter((dt)=> dateId[0] == dt.idDate)
+
+              const strukListItem = dataStrukHarian[0].order.filter((ls)=>dateId[1] == ls.idOrder)[0]
+              console.log(strukListItem)
+              document.querySelector('main').innerHTML=`
+              <center>
+                <h3>${profil.nama}</h3>
+                <div>${profil.alamat}</div>
+                <div>Telp. : ${profil.telepon}</div>
+                <div style="letter-spacing: 2px;">${(()=>{
+                  let mds = ''
+                  profil.medsos.forEach((ms)=>{mds += `<span> <b>${ms.platform}</b> : ${ms.akun} </span>`})
+                  return mds
+                })()
+                }</div>
+            </center>
+            <hr>
+            <div>
+              <b class="struk-ident">
+                <span>Work Order</span>
+                <span>:</span>
+                <span>${document.URL.split('#')[1]}</span>
+              </b>
+              <div class="struk-ident">
+                <span>Jam</span>
+                <span>:</span>
+                <span>${strukListItem.waktu}</span>
+              </div>
+              <div class="struk-ident">
+                <span>Tanggal</span>
+                <span>:</span>
+                <span>${dateId[0].substring(0, 2)}/${dateId[0].substring(2, 4)}/${dateId[0].substring(4, 8)}</span>
+              </div> 
+              <hr>
+            </div>
+            <div class="struk-wrap">
+              <div class="struk-list">${
+                (()=>{
+                  let strukItem = ''
+                  strukListItem.pembelian.forEach((dl)=> {
+                    strukItem += `                
+                        <div class="struk-item">
+                            <div class="struk-barang">${dl.barang}</div>
+                            <div class="qty-barang">
+                                <span class="struk-qty">${dl.qty}</span>
+                                <span>X</span>
+                                <span class="struk-harga">${parseInt(dl.harga).toLocaleString('id-ID')}</span>
+                                <span>=</span>
+                                <span class="struk-sub">${parseInt(dl.subTotal).toLocaleString('id-ID')}</span>
+                            </div>
+                            <hr>
+                        </div>
+                `
+                  
+                })
+                return strukItem
+              })()
+              }
+              </div>
+              <div class="struk-total">
+                  <span>Total : </span>
+                  <b>${strukListItem.total.toLocaleString('id-ID')}</b>
+              </div>
+              <div class="struk-bayar">
+                  <span for="tunai">Tunai : </span> 
+                  <b>${parseInt(strukListItem.tunai).toLocaleString('id-ID')}</b>             
+              </div>
+              <div class="struk-kembalian">
+                  <span>Kembalian : </span> 
+                  <b>${strukListItem.kembali.toLocaleString('id-ID')}</b>                  
+              </div>
+              <hr>
+            </div>
+            <div>${profil.keterangan.replaceAll('\n', '<br>')}</div>
+            <center><h3>*-Terimakasih Telah Berkunjung-*</h3></center>
+              `
+              // console.log(dataStrukHarian[0].order.filter((ls)=>dateId[1] == ls.idOrder))
+              window.print();
+            }
+          else alert('Browser tidak mendukung')
+          //console.log(document.URL.split('#')[1])
+      </script>
+    </body>
+</html>

@@ -1,0 +1,33 @@
+
+.medsos-container {
+    width: calc(100% - 90px);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .medsos-wrap {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .medsos-wrap .medsos {
+    width: 150px;
+    height: 40px;
+    flex: 2;
+  }
+  
+  .medsos-wrap .medsos[disabled] {
+    color: black;
+  }
+  
+  .medsos-wrap .akun-medsos {
+    flex: 4;
+  }
+  
+  main.profil textarea {
+    font-family: inherit;
+    height: 100px;
+    padding: 10px;
+  }
+  
