@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="./style/main-style.css">
+        <link rel="stylesheet" href="./style/kasir-style.css">
+      </head>
+    <body>
+        <nav class="navbar">
+          <div class="logo">
+            <a><span>Ka</span><i class="fa fa-dollar" aria-hidden="true"></i><span>ir</span></a>
+          </div>
+          <input type="checkbox" id="menu-toggle" class="menu-toggle">
+          <label for="menu-toggle" class="menu-ic">Menu</label>
+          <ul>
+            <li class="nav-item"><a href="./index.html" style="background: #6352d5;">Kasir</a></li>
+            <li class="nav-item"><a href="./input-harga.html">Input Harga</a></li>
+            <li class="nav-item"><a href="./laporan.html">Laporan</a></li>
+            <li class="nav-item"><a href="./profil.html">Profil</a></li>
+          </ul>
+
+        </nav>
+        <main class="kasir">
+            <div class="form-container">
+                <form class="form-data">
+                    <div class="input-data">
+                        <label for="id-barang" class="label-input">Id Barang</label>
+                        <input id="id-barang" type="number" class="input-def" required="">
+                    </div>
+                    <div class="input-data">
+                        <label for="barang-kasir" class="label-input">Barang</label>
+                        <div class="barang-input">
+                            <input id="barang-kasir" required="" autocomplete="off">
+                            <div class="search-list" style="display: none;">
+                                <ul></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-data">
+                        <label for="jumlah" class="label-input">Jumlah</label>
+                        <div class="harga-jumlah">
+                            <input id="jumlah" type="number" required="">
+                            <label for="harga-item" class="label-input">Harga</label>
+                            <input id="harga-item" type="number" required="">
+                        </div>
+                    </div>
+                    <div class="input-data">
+                        <label for="total" class="label-input">Total</label>
+                        <input id="total" class="input-def" type="number" required="">
+                    </div>
+                    <button>Tambah Data</button>
+                </form>
+              
+            </div>
+        </main>
+        <div class="struk-wrap">            
+            <h3>Work Order : <span contenteditable=""></span></h3>
+            <div class="struk-list"></div>
+            <div class="struk-total">
+                <span>Total : </span>
+                <b>0</b>
+            </div>
+            <div class="struk-bayar">
+                <label for="tunai">Tunai : </label> 
+                <input id="tunai" type="number">               
+            </div>
+            <div class="struk-kembalian">
+                <span>Kembalian : </span>
+                <b>0</b>
+            </div>
+            <button>Simpan</button>
+        </div>
+        <script>
+            const dataHargaKey = "harga-kasir";
+            const strukKasirKey = "struk-kasir"
+      
+            const setJSON = (str) => {
+              return JSON.stringify(str);
+            };
+      
+            const getJSON = (jsn) => {
+              return JSON.parse(jsn);
+            };
+      
+            const GetSet_DataLocal = (gs, val = "") => {
+              if (gs === "get") return localStorage.getItem(dataHargaKey);
+              else if (gs === "set") localStorage.setItem(dataHargaKey, val);
+            };
+            const GetSet_DataLocalKasir = (gs, val = "") => {
+              if (gs === "get") return localStorage.getItem(strukKasirKey);
+              else if (gs === "set") localStorage.setItem(strukKasirKey, val);
+            };
+            if(typeof Storage !== "undefined"){
+
+                const editURL = {
+                    base : document.URL.split('#'),
+                    edit : function(){
+                        if(this.base.length > 1){
+                            return {
+                                status : this.base[1].split('_')[0] === 'edit',
+                                full : this.base[1],
+                                idData: this.base[1].split('_')[1].split('-')
+                            }
+                        }
+                        else return false
+                    }
+            }
+                //console.log(editURL.edit())
+      
+                function searchingList(e){
+                    const dataBarang = getJSON(GetSet_DataLocal('get'))
+                    const idElement = e.target.id
+                    const searchQuery = (e.type == 'paste' ? e.clipboardData.getData('text') : e.target.value).toLowerCase().trim()
+                    const searchList = document.querySelector('.barang-input .search-list')
+
+                    let ifSearch = false                   
+
+                    searchList.querySelector('ul').replaceChildren()
+                    dataBarang.forEach((item)=>{
+
+                        if(idElement === "id-barang") ifSearch = item.id.toLowerCase().includes(searchQuery)
+                        if (idElement === "barang-kasir") ifSearch = item.barang.toLowerCase().includes(searchQuery)
+
+                        if(ifSearch && searchQuery.length > 0){
+                            searchList.style = ''
+                            const searchItem = document.createElement('li')
+                            searchItem.textContent = item.barang
+                            searchItem.addEventListener('click', (e)=>{
+                                const formData = document.querySelector('.form-data')
+                                formData.querySelector('#id-barang').value = item.id
+                                formData.querySelector('#barang-kasir').value = item.barang
+                                formData.querySelector('#harga-item').harga = item.harga
+                                formData.querySelector('#harga-item').value = item.harga[0].nominal
+                                searchList.style = 'display: none;'
+                                //console.log(e)
+                            })
+                            searchList.querySelector('ul').appendChild(searchItem)
+                        }                       
+                    })
+                    if(searchList.querySelectorAll('li').length < 1){ 
+                        searchList.style = 'display: none;'
+                        if(idElement === "barang-kasir") document.querySelector('.form-data').querySelector('#id-barang').value = '0000'
+                    }
+                    
+                    //console.log(ifSearch)
+                }
+
+                function subTotal(e){
+                    const inputJumlah = e.type == 'paste' ? e.clipboardData.getData('text') : e.target.value
+                    const chld2 = e.target.parentElement.children[2]
+                    const hargaInput = chld2.harga
+                    console.log(hargaInput)
+                        let stoper = false
+                        let nominalHarga = 0
+                        if(hargaInput){
+                            hargaInput.forEach((hrg)=>{
+                            if(parseInt(inputJumlah) < hrg.max && !stoper) {
+                                stoper = true
+                                nominalHarga = hrg.nominal * inputJumlah
+                                chld2.value = hrg.nominal
+                            }
+                            if(hrg.max === false && !stoper){
+                                nominalHarga = hrg.nominal * inputJumlah
+                                chld2.value = hrg.nominal
+                            }
+                        })
+                    }else nominalHarga = chld2.value * inputJumlah
+                        document.querySelector("#total").value = inputJumlah > 0 ? nominalHarga : 0
+                }
+
+                function eventKasir(evn){      
+                    document.querySelector('#id-barang').addEventListener(evn, (e)=>searchingList(e))
+                    document.querySelector('#barang-kasir').addEventListener(evn, (e)=>searchingList(e))
+                    document.querySelector('#jumlah').addEventListener(evn, (e)=>subTotal(e))
+                    document.querySelector('#harga-item').addEventListener(evn, (e)=>{
+                        const inputHarga = e.type == 'paste' ? e.clipboardData.getData('text') : e.target.value
+                        const chld0 = e.target.parentElement.children[0].value
+                        document.querySelector("#total").value = inputHarga > 0 ? (inputHarga * chld0) : 0
+                    })
+                }
+
+                function KasirPreview (data){
+                    return `                
+                        <div class="struk-item">
+                            <div class="struk-barang">${data.barang}</div>
+                            <div class="qty-barang">
+                                <span class="struk-qty">${data.qty}</span>
+                                <span>X</span>
+                                <span class="struk-harga">${parseInt(data.harga).toLocaleString('id-ID')}</span>
+                                <span>=</span>
+                                <span class="struk-sub">${parseInt(data.subTotal).toLocaleString('id-ID')}</span>
+                                <div class="hapus-harga fa fa-remove" onclick="HapusList(event)" style="color: rgb(207, 0, 0);"></div>
+                            </div>
+                            <hr>
+                        </div>
+                `
+                }
+
+                eventKasir('keyup')
+                eventKasir('paste')
+
+                const newDate = new Date()
+                const dateId = editURL.edit().status ?editURL.edit().idData[0] : `${String(newDate.getDate()).padStart(2, '0')}${String(newDate.getMonth()+1).padStart(2, '0')}${newDate.getFullYear()}`
+
+                document.querySelector('.struk-wrap h3 span').textContent = dateId
+                let dataStruk = []                
+                let orderHarian = []
+                let pembelianForm = []
+
+                if(GetSet_DataLocalKasir('get')){ 
+                    dataStruk = getJSON(GetSet_DataLocalKasir('get'))
+                    
+                    if(editURL.edit().status){
+                        dataStruk.forEach((strukDate)=>{
+                        if(strukDate.idDate.includes(editURL.edit().idData[0])){
+                            const strukDateOrder = strukDate.order.filter(item => item.idOrder != editURL.edit().idData[1])
+                            pembelianForm = strukDateOrder.pop().pembelian
+                        } 
+                        
+                    })
+                    pembelianForm.forEach((beli)=>{
+                        document.querySelector('.struk-wrap .struk-list').insertAdjacentHTML('beforeend',KasirPreview(beli))
+                    })
+                    TotalStruk(pembelianForm)
+                     //
+                    }
+                }
+
+                function TotalStruk(arr, getDt = false){
+                    let overTotal = 0
+                    arr.forEach((sbt)=>{
+                        overTotal += parseInt(sbt.subTotal)
+                    })
+                    const kembalian = document.querySelector('.struk-wrap .struk-bayar #tunai').value - overTotal
+                    if(getDt){
+                        return {
+                            total: overTotal, 
+                            tunai: document.querySelector('.struk-wrap .struk-bayar #tunai').value, 
+                            kembali: (kembalian < 0 ? 0 : kembalian)
+                        }
+                    }
+                    else{
+                        document.querySelector('.struk-wrap .struk-total b').textContent = overTotal.toLocaleString('id-ID')
+                        document.querySelector('.struk-wrap .struk-kembalian b').textContent = kembalian < 0 ? 0 : kembalian.toLocaleString('id-ID')
+                    }
+                }
+
+                document.querySelector('.form-data').addEventListener('submit', (e)=>{
+                    e.preventDefault()
+                    const dataForm = {
+                        idBarang : e.target[0].value,
+                        barang : e.target[1].value,
+                        qty : e.target[2].value,
+                        harga : e.target[3].value,
+                        subTotal : e.target[4].value
+                    }
+
+                    pembelianForm.push(dataForm)
+
+                    e.target.querySelector('ul').replaceChildren()
+                    e.target.querySelector('.search-list').style = 'display:none'
+
+                    for(let i = 0; i < e.target.length; i++){
+                        e.target[i].value = null
+                    }
+                    e.target[3].harga = 0
+                    //e.target.forEach((elm)=>{
+                      //  elm.value = null
+                  //  })
+                    document.querySelector('.struk-wrap .struk-list').insertAdjacentHTML('beforeend',`                
+                        <div class="struk-item">
+                            <div class="struk-barang">${dataForm.barang}</div>
+                            <div class="qty-barang">
+                                <span class="struk-qty">${dataForm.qty}</span>
+                                <span>X</span>
+                                <span class="struk-harga">${parseInt(dataForm.harga).toLocaleString('id-ID')}</span>
+                                <span>=</span>
+                                <span class="struk-sub">${parseInt(dataForm.subTotal).toLocaleString('id-ID')}</span>
+                                <div class="hapus-harga fa fa-remove" onclick="HapusList(event)" style="color: rgb(207, 0, 0);"></div>
+                            </div>
+                            <hr>
+                        </div>
+                `)                
+                TotalStruk(pembelianForm)
+                console.log(e)
+                })
+
+                document.querySelector('.struk-wrap .struk-bayar #tunai').addEventListener('input',(e)=>{
+                    TotalStruk(pembelianForm)
+                })
+
+                function HapusList(e){
+                    const btnHapus = Array.from(e.target.parentNode.closest(".struk-list").children);
+                    const indexBtn = btnHapus.indexOf(e.target.parentNode.parentNode);
+                    pembelianForm.splice(indexBtn, 1)
+                    TotalStruk(pembelianForm)
+                    e.target.parentNode.parentNode.remove()
+                    console.log(`Button index: ${indexBtn}`, pembelianForm);
+                }
+                document.querySelector('.struk-wrap button').addEventListener('click', (e)=>{
+                    
+                    if(pembelianForm.length >0 ){
+                        document.body.insertAdjacentHTML('beforeend', `
+                    <div class="alert-block">
+                        <div class="alert-wrap">
+                            <div class="alert-head">Pemberithauan</div>
+                            <div class="alert-text">Apakah anda yakin untuk menyimpan data?</div>
+                            <button class="batal-btn">Batal</button>
+                            <button>Simpan</button>
+                        </div>
+                    </div>`)
+
+                    let btnHandler = 0
+                    const alertBtn = document.querySelectorAll('.alert-wrap button')
+                    alertBtn[0].addEventListener('click',(e)=>{
+                        e.target.parentElement.parentElement.remove()
+                    })
+                    
+                    alertBtn[1].addEventListener('click',(eva)=>{
+                        eva.target.parentElement.parentElement.remove()
+                        if(btnHandler < 1){
+                            const strukPrev = e.target.parentElement
+                            console.log(TotalStruk(pembelianForm, true))
+                            //console.log(dataStruk.filter((d)=>date_id === d.idDate).length)
+                                strukPrev.querySelector('.struk-list').replaceChildren()
+                                strukPrev.querySelector('.struk-total b').textContent = 0
+                            if(dataStruk.filter((d)=>dateId === d.idDate).length < 1){
+                                //orderHarian.idDate = date_id
+                                dataStruk.push({idDate : dateId, order:[]})
+                                //orderHarian.
+                            }
+                            const strukByIdDate = dataStruk[dataStruk.findIndex((dt)=>dateId === dt.idDate)]
+                            const nwD = new Date()
+                            
+                            /**/strukByIdDate.order.push({
+                                idOrder : (strukByIdDate.order.reduce((max, o) => (o.idOrder > max ? o.idOrder : max), 0) + 1),
+                                waktu : `${String(nwD.getHours()).padStart(2, '0')}:${String(nwD.getMinutes()).padStart(2, '0')}`,
+                                pembelian : pembelianForm,
+                                total : TotalStruk(pembelianForm, true).total,
+                                tunai: TotalStruk(pembelianForm, true).tunai,
+                                kembali : TotalStruk(pembelianForm, true).kembali
+                            })
+                            GetSet_DataLocalKasir('set', setJSON(dataStruk))
+                            console.log(dataStruk)
+                            orderHarian = []
+                            pembelianForm = []
+                            window.open(`./cetak-struk.html#${dateId}-${(strukByIdDate.order.pop().idOrder)}`, '_blank');
+                            window.location.href = ''                            
+                        }                        
+                        btnHandler++
+                    })}
+
+                })
+
+                //document.querySelector('#barang-kasir').addEventListener('paste', (e)=>{
+
+                   // console.log(e.clipboardData.getData('text'))
+                  //  e.target.value = 'background:red'
+                //})
+
+            }
+            else alert('Browser Tidak Mendukung')
+
+        </script>
+    </body>
+</html>

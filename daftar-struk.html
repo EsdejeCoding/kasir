@@ -16,7 +16,7 @@
           <input type="checkbox" id="menu-toggle" class="menu-toggle">
           <label for="menu-toggle" class="menu-ic">Menu</label>
           <ul>
-            <li class="nav-item"><a href="./kasir.html">Kasir</a></li>
+            <li class="nav-item"><a href="./index.html">Kasir</a></li>
             <li class="nav-item"><a href="./input-harga.html">Input Harga</a></li>
             <li class="nav-item"><a href="./laporan.html" style="background: #6352d5;">Laporan</a></li>
             <li class="nav-item"><a href="./profil.html">Profil</a></li>
@@ -282,7 +282,7 @@
               const eTarget = e.target
               const listItem =  eTarget.parentElement.closest('.list-item')
               const getId = listItem.idDataStruk
-              window.location.href = (`./kasir.html#edit_${getId}`)
+              window.location.href = (`./index.html#edit_${getId}`)
             }
             
             ShowData()
