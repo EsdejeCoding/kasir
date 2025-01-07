@@ -27,12 +27,27 @@
             gap: 50px;
             text-align: end;
         }
+        button{
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          background: #007bff;
+          color: white;
+          border: none;
+          padding: 10px;
+        }
+        @media print {
+          button {
+            display: none;
+          }
+        }
       </style>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
       <main style="font-family: monospace;font-size: 11pt; padding:0 10px;"></main>
+      <button onclick="PrintStruk()">Cetak Struk</button>
       <script>
           const strukKasirKey = "struk-kasir"
           const profilKey = 'profil-kasir'
@@ -53,6 +68,9 @@
             if (gs === "get") return localStorage.getItem(profilKey);
             else if (gs === "set") localStorage.setItem(profilKey, val);
           };
+          function PrintStruk(){
+            window.print();
+          }
 
           if(typeof Storage !== "undefined"){
               const profil = getJSON(GetSet_DataLocalProfil('get'))
@@ -135,7 +153,7 @@
             <center><h3>*-Terimakasih Telah Berkunjung-*</h3></center>
               `
               // console.log(dataStrukHarian[0].order.filter((ls)=>dateId[1] == ls.idOrder))
-              window.print();
+              PrintStruk()
             }
           else alert('Browser tidak mendukung')
           //console.log(document.URL.split('#')[1])

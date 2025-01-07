@@ -16,7 +16,7 @@
           <input type="checkbox" id="menu-toggle" class="menu-toggle">
           <label for="menu-toggle" class="menu-ic">Menu</label>
           <ul>
-            <li class="nav-item"><a href="./index.html">Kasir</a></li>
+            <li class="nav-item"><a href="./kasir.html">Kasir</a></li>
             <li class="nav-item"><a href="./input-harga.html">Input Harga</a></li>
             <li class="nav-item"><a href="./laporan.html" style="background: #6352d5;">Laporan</a></li>
             <li class="nav-item"><a href="./profil.html">Profil</a></li>
@@ -72,7 +72,16 @@
                   <span>Pencarian : </span><b>Semua</b>
               </div>
             </div>
-            <div class="download" style="margin-right: 0;">Download Data <i class="fa fa-download" aria-hidden="true"></i></div>
+            <div style="display: flex; gap:20px">
+              <div class="download" style="margin-right: 0;">Download Data <i class="fa fa-download" aria-hidden="true"></i></div>
+              <div class="remove-struk" style="margin-right: 0;color:red;">Kosongkan Data <i class="fa fa-trash" aria-hidden="true"></i></div>
+            </div>
+          </div>
+          <div>
+            <div class="indicator-wrap ">   
+              <div class="indicator-bar"></div>
+              <center class="indicator-value">Ruang Data : 0%</center>
+            </div>
           </div>
           <hr>
           <ol>
@@ -80,6 +89,7 @@
           </ol>
           <hr>
         </main>
+        <footer>©EsdejeCoding 2024-25</footer>
         <script>
           //document.querySelector('.filter-wrap details').addEventListener('toggle', () => {
           //  console.log('Details 2 is now', details2.open ? 'open' : 'closed');
@@ -172,6 +182,22 @@
             const dataHarga = getJSON(GetSet_DataLocalHarga('get'))
             const dataStruk = getJSON(GetSet_DataLocalStruk('get'))
 
+            const indicatorWrap = document.querySelector('.indicator-wrap')
+
+            function LengthData(d){
+              return new TextEncoder().encode(d).length
+            }
+
+            function IndicatorData (){
+              const dataLength = (
+              (LengthData(GetSet_DataLocalHarga('get')) + 
+              LengthData(GetSet_DataLocalStruk('get')) + 
+              LengthData(localStorage.getItem('profil-kasir'))) / 4980000) * 100
+              indicatorWrap.children[0].style = `width:${parseFloat(dataLength.toFixed(2))}%`
+              indicatorWrap.children[1].innerHTML = `Ruang Data: ${parseFloat(dataLength.toFixed(2))}%`
+            }
+            IndicatorData()
+
             document.querySelector('.search-filter form').addEventListener('submit',(e)=>{
               e.preventDefault()
 
@@ -247,6 +273,7 @@
                       }
                     })
                     if(!searchStruk) document.querySelector('.daftar-struk ol').innerHTML = `<alert>Data ${qry.textQuery === false ? 'yang ditampilkan' : qry.textQuery} tidak ada</alert>`
+                    IndicatorData()
                    }
                   }
             function HapusListStruk (e){
@@ -259,7 +286,7 @@
                       <div class="alert-head">Pemberithauan</div>
                       <div class="alert-text">Apakah anda yakin untuk hapus data?</div>
                       <button class="batal-btn">Batal</button>
-                      <button>Hapus</button>
+                      <button style="background:#cd3f3f">Hapus</button>
                   </div>
               </div>`)
               document.querySelectorAll('.alert-block button')[0].addEventListener('click',(evAlert)=>{                            
@@ -282,7 +309,7 @@
               const eTarget = e.target
               const listItem =  eTarget.parentElement.closest('.list-item')
               const getId = listItem.idDataStruk
-              window.location.href = (`./index.html#edit_${getId}`)
+              window.location.href = (`./kasir.html#edit_${getId}`)
             }
             
             ShowData()
@@ -301,7 +328,27 @@
               link.click();
               document.body.removeChild(link);
             })
+
+            document.querySelector('div.remove-struk').addEventListener('click',()=>{              
+              document.body.insertAdjacentHTML('beforeend', `
+              <div class="alert-block">
+                  <div class="alert-wrap">
+                      <div class="alert-head">Pemberithauan</div>
+                      <div class="alert-text">Apakah anda yakin untuk hapus data?</div>
+                      <button class="batal-btn">Batal</button>
+                      <button style="background:#cd3f3f">Hapus</button>
+                  </div>
+              </div>`)
+              document.querySelectorAll('.alert-block button')[0].addEventListener('click',(evAlert)=>{                            
+                evAlert.target.parentElement.parentElement.remove()
+              })
+              document.querySelectorAll('.alert-block button')[1].addEventListener('click',(evAlert)=>{                            
+               GetSet_DataLocalStruk('set',[])
+                window.location.href = ''
+              })
+            })
           }
+
           else alert('Browser Tidak Mendukung')
         </script>
     </body>

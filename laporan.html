@@ -16,7 +16,7 @@
           <input type="checkbox" id="menu-toggle" class="menu-toggle">
           <label for="menu-toggle" class="menu-ic">Menu</label>
           <ul>
-            <li class="nav-item"><a href="./index.html">Kasir</a></li>
+            <li class="nav-item"><a href="./kasir.html">Kasir</a></li>
             <li class="nav-item"><a href="./input-harga.html">Input Harga</a></li>
             <li class="nav-item"><a href="./laporan.html" style="background: #6352d5;">Laporan</a></li>
             <li class="nav-item"><a href="./profil.html">Profil</a></li>
@@ -89,7 +89,12 @@
               <tbody></tbody>
           </table>
           </div>
+          <div class="indicator-wrap ">   
+            <div class="indicator-bar"></div>
+            <center class="indicator-value">Ruang Data : 0%</center>
+          </div>
         </main>
+        <footer>©EsdejeCoding 2024-25</footer>
         <script>
           //document.querySelector('.filter-wrap details').addEventListener('toggle', () => {
           //  console.log('Details 2 is now', details2.open ? 'open' : 'closed');
@@ -183,6 +188,22 @@
               
               const dataHarga = getJSON(GetSet_DataLocalHarga('get'))
               const dataStruk = getJSON(GetSet_DataLocalStruk('get'))
+
+              const indicatorWrap = document.querySelector('.indicator-wrap')
+  
+              function LengthData(d){
+                return new TextEncoder().encode(d).length
+              }
+  
+              function IndicatorData (){
+                const dataLength = (
+                (LengthData(GetSet_DataLocalHarga('get')) + 
+                LengthData(GetSet_DataLocalStruk('get')) + 
+                LengthData(localStorage.getItem('profil-kasir'))) / 4980000) * 100
+                indicatorWrap.children[0].style = `width:${parseFloat(dataLength.toFixed(2))}%`
+                indicatorWrap.children[1].innerHTML = `Ruang Data: ${parseFloat(dataLength.toFixed(2))}%`
+              }
+              IndicatorData()
 
               let dataDownload = {
                 pencarian : {textQuery : false, filter: false},
@@ -390,8 +411,9 @@
               const jsonString = setJSON(dataDownload);
               const blob = new Blob([jsonString], { type: 'application/json' });
               const link = document.createElement('a');
-
-              link.download = 'data-laporan-struk.json';
+              link.download = `data-laporan-struk(${
+                (dataDownload.pencarian.textQuery !== false ? dataDownload.pencarian.textQuery+'_' : '') +
+                (dataDownload.pencarian.filter !== false ? dataDownload.pencarian.filter+'' : `${dateVal[0]}${dateVal[1]}${dateVal[2]}`)}).json`;
               link.href = URL.createObjectURL(blob);
 
               document.body.appendChild(link);

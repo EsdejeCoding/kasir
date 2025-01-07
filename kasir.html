@@ -52,27 +52,27 @@
                         <input id="total" class="input-def" type="number" required="">
                     </div>
                     <button>Tambah Data</button>
-                </form>
-              
+                </form>              
+            </div>
+            <div class="struk-wrap">            
+                <h3>Work Order : <span contenteditable=""></span></h3>
+                <div class="struk-list"></div>
+                <div class="struk-total">
+                    <span>Total : </span>
+                    <b>0</b>
+                </div>
+                <div class="struk-bayar">
+                    <label for="tunai">Tunai : </label> 
+                    <input id="tunai" type="number">               
+                </div>
+                <div class="struk-kembalian">
+                    <span>Kembalian : </span>
+                    <b>0</b>
+                </div>
+                <button>Simpan</button>
             </div>
         </main>
-        <div class="struk-wrap">            
-            <h3>Work Order : <span contenteditable=""></span></h3>
-            <div class="struk-list"></div>
-            <div class="struk-total">
-                <span>Total : </span>
-                <b>0</b>
-            </div>
-            <div class="struk-bayar">
-                <label for="tunai">Tunai : </label> 
-                <input id="tunai" type="number">               
-            </div>
-            <div class="struk-kembalian">
-                <span>Kembalian : </span>
-                <b>0</b>
-            </div>
-            <button>Simpan</button>
-        </div>
+        <footer>©EsdejeCoding 2024-25</footer>
         <script>
             const dataHargaKey = "harga-kasir";
             const strukKasirKey = "struk-kasir"
@@ -94,7 +94,20 @@
               else if (gs === "set") localStorage.setItem(strukKasirKey, val);
             };
             if(typeof Storage !== "undefined"){
-
+                //if(new TextEncoder().encode(setJSON(dataDownload)).length)
+                function LengthData(d){
+                    return new TextEncoder().encode(d).length
+                }
+                if((LengthData(GetSet_DataLocal('get'))+LengthData(GetSet_DataLocalKasir('get'))+LengthData(localStorage.getItem('profil-kasir'))) === 4980000){
+                    document.body.insertAdjacentHTML('beforeend', `
+                    <div class="alert-block">
+                        <div class="alert-wrap">
+                            <div class="alert-head">Pemberithauan</div>
+                            <div class="alert-text">Kapasitas data hampir habis. Lakukan back-up dan pembersihan !</div>
+                            <button onclick="window.location.href =('./daftar-struk.html')" style="margin: 20px 20px 0;">Mengerti</button>
+                        </div>
+                    </div>`)
+                }
                 const editURL = {
                     base : document.URL.split('#'),
                     edit : function(){
@@ -309,17 +322,17 @@
                             <div class="alert-head">Pemberithauan</div>
                             <div class="alert-text">Apakah anda yakin untuk menyimpan data?</div>
                             <button class="batal-btn">Batal</button>
-                            <button>Simpan</button>
+                            <button class="save-data">Simpan</button>
                         </div>
                     </div>`)
 
                     let btnHandler = 0
-                    const alertBtn = document.querySelectorAll('.alert-wrap button')
-                    alertBtn[0].addEventListener('click',(e)=>{
+                    const alertBtn = document.querySelector('.alert-wrap')
+                    alertBtn.querySelector('.batal-btn').addEventListener('click',(e)=>{
                         e.target.parentElement.parentElement.remove()
                     })
                     
-                    alertBtn[1].addEventListener('click',(eva)=>{
+                    alertBtn.querySelector('.save-data').addEventListener('click',(eva)=>{
                         eva.target.parentElement.parentElement.remove()
                         if(btnHandler < 1){
                             const strukPrev = e.target.parentElement

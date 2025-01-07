@@ -104,3 +104,17 @@
     justify-content: space-between;
     flex-wrap: wrap;
   }
+.indicator-wrap {
+    width: 200px;
+    border: solid 1px grey;
+    height: 20px;
+    position: relative;
+    margin: 10px 0;
+}
+.indicator-bar{
+  background: #55e56b;
+  height: inherit;
+}
+.indicator-value{
+  position: absolute;top: 0;width: 100%;
+}
