@@ -110,9 +110,10 @@
     height: 20px;
     position: relative;
     margin: 10px 0;
+    background: #90f4a4;
 }
 .indicator-bar{
-  background: #55e56b;
+  background: #f49c36;
   height: inherit;
 }
 .indicator-value{

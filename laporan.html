@@ -91,7 +91,7 @@
           </div>
           <div class="indicator-wrap ">   
             <div class="indicator-bar"></div>
-            <center class="indicator-value">Ruang Data : 0%</center>
+            <center class="indicator-value">Data Terpakai : 0%</center>
           </div>
         </main>
         <footer>©EsdejeCoding 2024-25</footer>
@@ -200,8 +200,9 @@
                 (LengthData(GetSet_DataLocalHarga('get')) + 
                 LengthData(GetSet_DataLocalStruk('get')) + 
                 LengthData(localStorage.getItem('profil-kasir'))) / 4980000) * 100
-                indicatorWrap.children[0].style = `width:${parseFloat(dataLength.toFixed(2))}%`
-                indicatorWrap.children[1].innerHTML = `Ruang Data: ${parseFloat(dataLength.toFixed(2))}%`
+  
+                indicatorWrap.children[0].style = `width:${parseFloat(dataLength > 100 ? 100 : dataLength.toFixed(2))}%`
+                indicatorWrap.children[1].innerHTML = `Data Terpakai : ${parseFloat(dataLength > 100 ? 100 : dataLength.toFixed(2))}%`
               }
               IndicatorData()
 
