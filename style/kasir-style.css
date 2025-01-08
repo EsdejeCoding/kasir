@@ -26,4 +26,10 @@ main.kasir #id-barang {
     text-align: end;
     margin-right: 55px;
   }
+@media (max-width : 400px){
+  .struk-bayar{
+    flex-wrap : wrap;
+    gap: 10px;
+  }
+}
   
