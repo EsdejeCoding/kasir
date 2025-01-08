@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="icon" type="image/png" href="./assets/icon.png">
         
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -228,53 +229,53 @@
               
             })
 
-            function ShowData(qry = {textQuery:false}, rmData = false){                
-                
-                console.log(qry)
+            function ShowData(qry = {textQuery:false}, rmData = false){
 
-                let indexList = 0
-                let searchStruk = false
+                if(dataStruk){
+                  let indexList = 0
+                  let searchStruk = false
 
-                /**/if(rmData){
-                  dataStruk.forEach((strukDate)=>{
-                    if(strukDate.idDate.includes(qry.textQuery[0])){
-                      strukDate.order = strukDate.order.filter(item => item.idOrder != qry.textQuery[1]) 
-                    }                          
-                  })                
-                  qry.textQuery = false
-                  GetSet_DataLocalStruk('set', setJSON(dataStruk))
-                }
+                  if(rmData){
+                    dataStruk.forEach((strukDate)=>{
+                      if(strukDate.idDate.includes(qry.textQuery[0])){
+                        strukDate.order = strukDate.order.filter(item => item.idOrder != qry.textQuery[1]) 
+                      }                          
+                    })                
+                    qry.textQuery = false
+                    GetSet_DataLocalStruk('set', setJSON(dataStruk))
+                  }
 
-                if(!rmData){
-                      dataStruk.forEach((strukDate)=>{
-                      
-                        if(qry.textQuery === false || strukDate.idDate.includes(qry.textQuery[0])){
-                          //console.log(strukDate.order.length)
-                          strukDate.order.forEach((strukOrder)=>{                        
-                            if(qry.textQuery === false || qry.textQuery.length <2 ||(qry.textQuery.length > 1 && (strukOrder.idOrder==qry.textQuery[1]))){
-                              document.querySelector('.daftar-struk ol').insertAdjacentHTML(
-                                'beforeend',                            `
-                                <div class="list-item">
-                                    <a class="list-wrap" href="./cetak-struk.html#${strukDate.idDate+'-'+strukOrder.idOrder}" target="_blank">
-                                        <li>
-                                            <b>${strukDate.idDate+'-'+strukOrder.idOrder}</b>
-                                        </li>
-                                    </a>
-                                    <div class="delete-edit">
-                                        <i class="fa fa-remove" aria-hidden="true" onClick=HapusListStruk(event)></i>
-                                        <i class="fa fa-pencil" aria-hidden="true" onClick=EditListStruk(event)></i>
-                                    </div>
-                                </div>`
-                            )
-                            document.querySelector('.daftar-struk ol').children[indexList].idDataStruk = strukDate.idDate+'-'+strukOrder.idOrder                       
-                            indexList++
-                            searchStruk = true
-                          }
-                        })                        
-                      }
-                    })
-                    if(!searchStruk) document.querySelector('.daftar-struk ol').innerHTML = `<alert>Data ${qry.textQuery === false ? 'yang ditampilkan' : qry.textQuery} tidak ada</alert>`
-                    IndicatorData()
+                  if(!rmData){
+                        dataStruk.forEach((strukDate)=>{
+                        
+                          if(qry.textQuery === false || strukDate.idDate.includes(qry.textQuery[0])){
+                            //console.log(strukDate.order.length)
+                            strukDate.order.forEach((strukOrder)=>{                        
+                              if(qry.textQuery === false || qry.textQuery.length <2 ||(qry.textQuery.length > 1 && (strukOrder.idOrder==qry.textQuery[1]))){
+                                document.querySelector('.daftar-struk ol').insertAdjacentHTML(
+                                  'beforeend',                            `
+                                  <div class="list-item">
+                                      <a class="list-wrap" href="./cetak-struk.html#${strukDate.idDate+'-'+strukOrder.idOrder}" target="_blank">
+                                          <li>
+                                              <b>${strukDate.idDate+'-'+strukOrder.idOrder}</b>
+                                          </li>
+                                      </a>
+                                      <div class="delete-edit">
+                                          <i class="fa fa-remove" aria-hidden="true" onClick=HapusListStruk(event)></i>
+                                          <i class="fa fa-pencil" aria-hidden="true" onClick=EditListStruk(event)></i>
+                                      </div>
+                                  </div>`
+                              )
+                              document.querySelector('.daftar-struk ol').children[indexList].idDataStruk = strukDate.idDate+'-'+strukOrder.idOrder                       
+                              indexList++
+                              searchStruk = true
+                            }
+                          })                        
+                        }
+                      })
+                      if(!searchStruk) document.querySelector('.daftar-struk ol').innerHTML = `<alert>Data ${qry.textQuery === false ? 'yang ditampilkan' : qry.textQuery} tidak ada</alert>`
+                      IndicatorData()
+                    }
                    }
                   }
             function HapusListStruk (e){

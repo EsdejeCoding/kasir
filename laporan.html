@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="icon" type="image/png" href="./assets/icon.png">
         
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -276,6 +277,8 @@
             })
 
             function ShowData(qry = {filterIndex:false, textQuery:false}){
+
+              if(dataStruk){
               let indexData = qry.filterIndex === false ? dataStruk.length-1 : qry.filterIndex
               console.log('par show '+ qry.filterIndex, qry)
               const strukBeli = ()=>{
@@ -299,8 +302,7 @@
               }
 
                 let beda = []
-                //console.log(strukBeli()[0].sama)
-              /*const dataLaporan = */dataHarga.forEach((dtHarga) => {
+                dataHarga.forEach((dtHarga) => {
                 strukBeli().forEach((dtStruk)=>{
                   if(dtStruk.idBarang == dtHarga.id) {
                     dtStruk.sama = true
@@ -316,22 +318,6 @@
                   const item = dtStruk.pembelian.find((p) => p.idBarang == dtHarga.id);
                   return (sum + (item ? parseInt(item.subTotal) : 0));
                 }, 0);
-
-                /*const gx = dataStruk[indexData].order.reduce((sum, dtStruk) => {
-                  const item = dtStruk.pembelian.find((p) => p.idBarang == dtHarga.id);
-                  try{
-                    console.log(item.idBarang, dtHarga.id)
-                  }catch(err){}
-                  return (sum + (item ? parseInt(item.subTotal) : 0));
-                }, 0);*/
-                
-                /*dataStruk[indexData].order.forEach((dtStruk)=>{
-                  dtStruk.pembelian.forEach((beli)=>{
-                    console.log(beli)
-                  })
-                })*/
-
-                //console.log(gx)
                 
                 if(totalQty > 0){
                   laporTD.push( {idBarang: dtHarga.id, barang: dtHarga.barang, qty: totalQty, subTotal: totalSub});
@@ -342,7 +328,7 @@
               beda = (strukBeli().filter(sm=>!sm.sama))
               laporTD = [...laporTD, ...beda]
               let dataColect = []
-              /**/laporTD.forEach((bData)=>{
+              laporTD.forEach((bData)=>{
 
                 if(!qry.textQuery || bData.barang.toLowerCase().includes(qry.textQuery)){
                   no_total.no++                
@@ -392,9 +378,7 @@
                     <td><b>${no_total.sub.toLocaleString('id-ID')}</b></td>
                   </tr>`
               )}
-              //console.log(fe)
-
-              //console.log(dataStruk[indexData].order)
+            }
               
             }
             

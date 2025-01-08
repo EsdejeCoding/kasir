@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="icon" type="image/png" href="./assets/icon.png">
         
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -62,7 +63,7 @@
                     <b>0</b>
                 </div>
                 <div class="struk-bayar">
-                    <label for="tunai">Tunai : </label> 
+                    <label for="tunai">Tunai : <span></span></label> 
                     <input id="tunai" type="number">               
                 </div>
                 <div class="struk-kembalian">
@@ -85,7 +86,7 @@
               return JSON.parse(jsn);
             };
       
-            const GetSet_DataLocal = (gs, val = "") => {
+            const GetSet_DataLocalHarga = (gs, val = "") => {
               if (gs === "get") return localStorage.getItem(dataHargaKey);
               else if (gs === "set") localStorage.setItem(dataHargaKey, val);
             };
@@ -93,17 +94,27 @@
               if (gs === "get") return localStorage.getItem(strukKasirKey);
               else if (gs === "set") localStorage.setItem(strukKasirKey, val);
             };
+            if(!GetSet_DataLocalHarga('get') || !localStorage.getItem('profil-kasir')){
+                document.body.insertAdjacentHTML('beforeend', `
+                    <div class="alert-block">
+                        <div class="alert-wrap">
+                            <div class="alert-head">Pemberithauan</div>
+                            <div class="alert-text">Anda belum menambahkan ${localStorage.getItem('profil-kasir') ? '' : '<b>Data Profil</b>'}${(GetSet_DataLocalHarga('get') && localStorage.getItem('profil-kasir')) ? '' : ' dan '}${GetSet_DataLocalHarga('get') ? '' : '<b>Data Harga</b>'}! </div>
+                            <button onclick="window.location.href =('./${localStorage.getItem('profil-kasir') ? 'input-harga' : 'profil'}.html')" style="margin: 20px 20px 0;">Mengerti</button>
+                        </div>
+                    </div>`)
+            }
             if(typeof Storage !== "undefined"){
                 //if(new TextEncoder().encode(setJSON(dataDownload)).length)
                 function LengthData(d){
                     return new TextEncoder().encode(d).length
                 }
-                if((LengthData(GetSet_DataLocal('get'))+LengthData(GetSet_DataLocalKasir('get'))+LengthData(localStorage.getItem('profil-kasir'))) === 4980000){
+                if((LengthData(GetSet_DataLocalHarga('get'))+LengthData(GetSet_DataLocalKasir('get'))+LengthData(localStorage.getItem('profil-kasir'))) === 4980000){
                     document.body.insertAdjacentHTML('beforeend', `
                     <div class="alert-block">
                         <div class="alert-wrap">
                             <div class="alert-head">Pemberithauan</div>
-                            <div class="alert-text">Kapasitas data hampir habis. Lakukan back-up dan pembersihan !</div>
+                            <div class="alert-text">Kapasitas data hampir habis. Lakukan back-up dan pembersihan!</div>
                             <button onclick="window.location.href =('./daftar-struk.html')" style="margin: 20px 20px 0;">Mengerti</button>
                         </div>
                     </div>`)
@@ -124,7 +135,7 @@
                 //console.log(editURL.edit())
       
                 function searchingList(e){
-                    const dataBarang = getJSON(GetSet_DataLocal('get'))
+                    const dataBarang = getJSON(GetSet_DataLocalHarga('get'))
                     const idElement = e.target.id
                     const searchQuery = (e.type == 'paste' ? e.clipboardData.getData('text') : e.target.value).toLowerCase().trim()
                     const searchList = document.querySelector('.barang-input .search-list')
@@ -248,6 +259,7 @@
                         overTotal += parseInt(sbt.subTotal)
                     })
                     const kembalian = document.querySelector('.struk-wrap .struk-bayar #tunai').value - overTotal
+                    document.querySelector('.struk-wrap .struk-bayar span').innerHTML = parseInt(document.querySelector('.struk-wrap .struk-bayar #tunai').value).toLocaleString('id-ID')
                     if(getDt){
                         return {
                             total: overTotal, 
