@@ -69,6 +69,11 @@
     </main>
     <footer>©EsdejeCoding 2024-25</footer>
     <script>
+      function TitleWeb(){
+          const pathName = window.location.pathname.split('/').pop().replace(/-|\.\w+$/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
+          document.title = 'Kasir - '+pathName
+      }
+      TitleWeb()
       const dataHargaKey = "harga-kasir";
 
       const setJSON = (str) => {

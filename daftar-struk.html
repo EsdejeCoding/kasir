@@ -92,9 +92,11 @@
         </main>
         <footer>©EsdejeCoding 2024-25</footer>
         <script>
-          //document.querySelector('.filter-wrap details').addEventListener('toggle', () => {
-          //  console.log('Details 2 is now', details2.open ? 'open' : 'closed');
-       //   });
+          function TitleWeb(){
+              const pathName = window.location.pathname.split('/').pop().replace(/-|\.\w+$/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
+              document.title = 'Kasir - '+pathName
+          }
+          TitleWeb()
 
           const dataHargaKey = "harga-kasir";
           const strukKasirKey = "struk-kasir"

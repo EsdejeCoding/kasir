@@ -75,6 +75,26 @@
         </main>
         <footer>©EsdejeCoding 2024-25</footer>
         <script>
+            const editURL = {
+                base : document.URL.split('#'),
+                edit : function(){
+                    if(this.base.length > 1){
+                        return {
+                            status : this.base[1].split('_')[0] === 'edit',
+                            full : this.base[1],
+                            idData: this.base[1].split('_')[1].split('-')
+                        }
+                    }
+                    else return false
+                }
+        }
+        function TitleWeb(){
+            const pathName = window.location.pathname.split('/').pop().replace(/-|\.\w+$/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
+            document.title = pathName + (editURL.edit().status ? ('- '+ editURL.edit().full) : '')
+        }
+
+        TitleWeb()
+           // console.log(window.location.pathname.split('/').pop().replace(/-|\.\w+$/g, ' ')+editURL.edit().status)
             const dataHargaKey = "harga-kasir";
             const strukKasirKey = "struk-kasir"
       
@@ -119,19 +139,6 @@
                         </div>
                     </div>`)
                 }
-                const editURL = {
-                    base : document.URL.split('#'),
-                    edit : function(){
-                        if(this.base.length > 1){
-                            return {
-                                status : this.base[1].split('_')[0] === 'edit',
-                                full : this.base[1],
-                                idData: this.base[1].split('_')[1].split('-')
-                            }
-                        }
-                        else return false
-                    }
-            }
                 //console.log(editURL.edit())
       
                 function searchingList(e){

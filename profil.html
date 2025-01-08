@@ -70,6 +70,12 @@
         </main>
         <footer>©EsdejeCoding 2024-25</footer>
         <script>
+          function TitleWeb(){
+              const pathName = window.location.pathname.split('/').pop().replace(/-|\.\w+$/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
+              document.title = 'Kasir - '+pathName
+          }
+          TitleWeb()
+
           const profilKey = 'profil-kasir'
 
         /***Mengubah JSON String*/
